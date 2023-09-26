@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
@@ -7,17 +8,16 @@ import { BsPencilFill, BsFillTrash3Fill } from "react-icons/bs";
 import Swal from "sweetalert2";
 
 
-interface DivisionFormProps {
+interface Props {
    api: string;
 }
-
 interface DivisionData {
    id: number;
    dV_ID: string;
    dV_Name: string;
 }
 
-export default function DivisionForm(props: DivisionFormProps) {
+export default function DivisionTable(props: Props) {
    const { api } = props;
    const [data, setData] = useState<DivisionData[]>([]);
    const [show, setShow] = useState(false);
@@ -30,8 +30,8 @@ export default function DivisionForm(props: DivisionFormProps) {
 
    const columns = [
       { name: "#", selector: (row: DivisionData) => row.id.toString() },
-      { name: "รหัสแผนก", selector: (row: DivisionData) => row.dV_ID, sortable: false }, // ตั้ง sortable เป็น false
-      { name: "ชื่อแผนก", selector: (row: DivisionData) => row.dV_Name, sortable: false }, // ตั้ง sortable เป็น false
+      { name: "รหัสแผนก", selector: (row: DivisionData) => row.dV_ID, sortable: true }, // ตั้ง sortable เป็น false
+      { name: "ชื่อแผนก", selector: (row: DivisionData) => row.dV_Name, sortable: true }, // ตั้ง sortable เป็น false
       {
          name: "จัดการ",
          cell: (row: DivisionData) => (
@@ -60,7 +60,7 @@ export default function DivisionForm(props: DivisionFormProps) {
    };
 
    const handleDelete = async (id: number) => {
-      console.log("Delete clicked for row:", id);
+
       Swal.fire({
          title: 'ยืนยันการลบ',
          icon: 'warning',
@@ -79,25 +79,19 @@ export default function DivisionForm(props: DivisionFormProps) {
                   // แสดงข้อความเมื่อลบสำเร็จ
                   Swal.fire(
                      'Deleted!',
-                     'ข้อมูลถูกลบเรียบร้อยแล้ว.',
+                     response.data.message,
                      'success'
                   );
                   // รีเฟรชข้อมูลหลังจากลบ
                   fetchData();
-               } else {
-                  // แสดงข้อความเมื่อเกิดข้อผิดพลาดในการลบ
-                  Swal.fire(
-                     'Error!',
-                     'เกิดข้อผิดพลาดในการลบข้อมูล.',
-                     'error'
-                  );
+
                }
-            } catch (error) {
+            } catch (error: any) {
                console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", error);
                // แสดงข้อความเมื่อเกิดข้อผิดพลาดในการลบข้อมูล
                Swal.fire(
                   'Error!',
-                  'เกิดข้อผิดพลาดในการลบข้อมูล.',
+                  error.response.message,
                   'error'
                );
             }

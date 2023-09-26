@@ -1,6 +1,6 @@
 import Menu from "../headers/menu"
 import Footer from "../footer/footer"
-import DivisionForm from "./divisionForm";
+import DivisionTable from "./divisionTable";
 
 interface DivisionProps {
     api: string
@@ -11,7 +11,7 @@ export default function Division(props: DivisionProps) {
     return (
         <>
             <Menu api={api} />
-            <DivisionForm api={api} />
+            <DivisionTable api={api} />
             <Footer />
         </>
     )
