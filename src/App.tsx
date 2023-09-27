@@ -2,7 +2,7 @@ import LoginForm from "./components/login/loginform";
 import Home from "./components/home/home";
 import Division from "./components/division/division";
 import Positions from "./components/position/position";
-import Users from "./components/users/user";
+import Users from "./components/users/users";
 import Products from "./components/products/product";
 import Checkapproval from "./components/checkapproval/checkapproval";
 import Incomingstock from "./components/incommingStock/incomingstock";

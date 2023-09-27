@@ -51,6 +51,11 @@ export default function PosisionTable(props: Props) {
             name: '#', selector: (row: PositionData) => row.id, sortable: true,
         },
         {
+            name: 'รหัสตำแหน่ง',
+            selector: (row: PositionData) => row.p_ID,
+            sortable: true,
+        },
+        {
             name: 'แผนก',
             selector: (row: PositionData) => row.dV_Name,
             sortable: true,
@@ -89,49 +94,29 @@ export default function PosisionTable(props: Props) {
         } else {
 
 
-
             try {
-                const formData = {
-                    dV_ID: dV_ID,
-                    p_Name: p_Name,
-                }
-                if (!editId) {
-                    const response = await axios.post(`${api}/positionAPI`, formData);
-                    if (response.status === 200) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-
-                        fetchData();
-                        handleClose();
-                    } else {
-                        console.log("รหัส HTTP ไม่ถูกต้อง:", response.status);
-                    }
-
+                const formData = { dV_ID, p_Name };
+                const apiUrl = editId ? `${api}/positionAPI/${editId}` : `${api}/positionAPI`;
+                const response = await (editId ? axios.put(apiUrl, formData) : axios.post(apiUrl, formData));
+                if (response.status === 200) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    fetchData();
+                    handleClose();
                 } else {
-
-                    const response = await axios.put(`${api}/positionAPI/${editId}`, formData);
-                    if (response.status === 200) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-
-                        fetchData();
-                        handleClose();
-                    } else {
-                        console.log("รหัส HTTP ไม่ถูกต้อง:", response.status);
-                    }
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: response.data.message,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
                 }
-
-
 
             } catch (error) {
                 console.error("Error sending data to the API", error);

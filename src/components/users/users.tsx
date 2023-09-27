@@ -1,5 +1,6 @@
 import Menu from "../headers/menu";
 import Footer from "../footer/footer";
+import UsersTable from "./userstable";
 interface Props {
   api: string;
 }
@@ -8,6 +9,7 @@ export default function Users(props: Props) {
   return (
     <>
       <Menu api={api} />
+      <UsersTable api={api} />
       <Footer />
     </>
   );
