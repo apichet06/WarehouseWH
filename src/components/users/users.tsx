@@ -1,6 +1,6 @@
 import Menu from "../headers/menu";
 import Footer from "../footer/footer";
-import UsersTable from "./userstable";
+import UsersTable from "./usersTable";
 interface Props {
   api: string;
 }

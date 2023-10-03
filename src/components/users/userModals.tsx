@@ -1,7 +1,8 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
-import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
 
 interface Props {
     show: boolean,
@@ -10,69 +11,54 @@ interface Props {
     validated: boolean
     api: string
     editId: number | string;
-    handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    user: {
+
+    editData: {
         username: string;
         firstName: string;
         lastName: string;
-        imageFile: string;
         dV_ID: string;
         p_ID: string;
         status: string
-
     };
-    setDV_ID: (newValue: string) => void;
-    setP_ID: (newValue: string) => void;
+    p_ID: string;
+    dV_ID: string;
+    setUsername: (value: string) => void;
+    setLastName: (value: string) => void;
+    setFirstName: (value: string) => void;
+    setDV_ID: (value: string) => void;
+    setStatus: (vlue: string) => void;
+    setP_ID: (value: string) => void;
+    imageUrl: string | null;
+    handleFileUpload: (event: ChangeEvent<HTMLInputElement>) => void;
+
 }
+
+
 export default function UsersModals(props: Props) {
-    const { show, handleClose, handleSubmit, validated, editId, api, user, handleInputChange, setDV_ID, setP_ID } = props;
+    const { show, handleClose, handleSubmit, validated, editId, api, p_ID, dV_ID, editData, setFirstName, setUsername, setLastName, setStatus, setDV_ID, setP_ID,
+        imageUrl, handleFileUpload } = props;
 
     const [divisionList, setDivisionList] = useState([]);
-    const [positionList, setPositioList] = useState([]);
-    const [filteredPositionList, setFilterPositionList] = useState([]);
-
-    // เพิ่ม state สำหรับตำแหน่งที่เลือก
-    const fetchData = useCallback(async () => {
-
-        try {
-            const DivisionResponse = await axios.get(`${api}/DivisionAPI`);
-            if (DivisionResponse.status === 200) {
-                setDivisionList(DivisionResponse.data.result)
-
-            }
-
-            const PositionResponse = await axios.get(`${api}/PositionAPI`);
-            if (PositionResponse.status === 200) {
-                setPositioList(PositionResponse.data.result)
-                if (editId) {
-                    const filteredPositions = PositionResponse.data.result.filter((p: any) => p.dV_ID === user.dV_ID);
-
-                    setFilterPositionList(filteredPositions);
-                }
-            }
-        } catch (error) {
-            console.log(error);
-        }
-
-    }, [api, editId, user])
+    const [positionList, setPositionList] = useState([]);
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+
+                const divisionResponse = await axios.get(api + '/DivisionAPI');
+                setDivisionList(divisionResponse.data.result);
+
+                const positionResponse = await axios.get(api + '/PositionAPI');
+                setPositionList(positionResponse.data.result);
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
         fetchData();
-    }, [fetchData])
 
-    const handleDivisionChange = (e: ChangeEvent<HTMLSelectElement>) => {
-
-        const selectedDivisionId = e.target.value;
-        setDV_ID(selectedDivisionId);
-
-        const filteredPositions = positionList.filter((e: any) => e.dV_ID === selectedDivisionId);
-        setFilterPositionList(filteredPositions);
-
-    };
-
-    const handlePositionChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        setP_ID(e.target.value);
-    };
+    }, [api]);
 
 
     return (
@@ -90,34 +76,34 @@ export default function UsersModals(props: Props) {
                 <Modal.Body>
                     <Form noValidate validated={validated} onSubmit={handleSubmit}>
                         <Row className="mb-3">
-                            <Form.Group as={Col} md="6">
+                            <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>ชื่อล็อกอิน</Form.Label>
-                                <Form.Control type="text" placeholder="Username" name="username" required defaultValue={user.username} onChange={handleInputChange} />
+                                <Form.Control type="text" placeholder="Username" name="username" required defaultValue={editData.username} onChange={(e) => (setUsername(e.target.value))} />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณากรอกชื่อล็อกอิน
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col} md="6">
+                            <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>รหัสผ่าน</Form.Label>
-                                <Form.Control type="text" placeholder="รหัสผ่าน" required value={123456} disabled onChange={handleInputChange} />
+                                <Form.Control type="text" placeholder="รหัสผ่าน" required value={123456} disabled />
                             </Form.Group>
-                            <Form.Group as={Col} md="6">
+                            <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>ชื่อ</Form.Label>
-                                <Form.Control type="text" placeholder="ชื่อ" name="firstName" required defaultValue={user.firstName} onChange={handleInputChange} />
+                                <Form.Control type="text" placeholder="ชื่อ" name="firstName" required defaultValue={editData.firstName} onChange={(e) => setFirstName(e.target.value)} />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณกรอกชื่อจริง
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col} md="6">
+                            <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>นามสกุล</Form.Label>
-                                <Form.Control type="text" placeholder="นามสกุล" name="lastName" required defaultValue={user.lastName} onChange={handleInputChange} />
+                                <Form.Control type="text" placeholder="นามสกุล" name="lastName" required defaultValue={editData.lastName} onChange={(e) => setLastName(e.target.value)} />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณกรอกนามสกุล
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col} md="6">
+                            <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>แผนก</Form.Label>
-                                <Form.Select name="dV_ID" required defaultValue={user.dV_ID} onChange={handleDivisionChange}>
+                                <Form.Select name="dV_ID" required defaultValue={editData.dV_ID} onChange={(e) => setDV_ID(e.target.value)}>
                                     <option value="">เลือกแผนก</option>
                                     {divisionList.map((item: any) => (
                                         <option key={item.id} value={item.dV_ID}>{item.dV_Name}</option>
@@ -127,24 +113,39 @@ export default function UsersModals(props: Props) {
                                     กรุณกรอกแผนก
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col} md="6">
+                            <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>ตำแหน่ง</Form.Label>
-                                <Form.Select name="p_ID" required defaultValue={user.p_ID} onChange={handlePositionChange}>
+                                <Form.Select name="p_ID" required defaultValue={p_ID} onChange={(e) => setP_ID(e.target.value)}>
                                     <option value="">เลือกตำแหน่ง</option>
-                                    {filteredPositionList.map((item: any) => (
+                                    {positionList.filter((item: any) => item.dV_ID === (dV_ID != '' ? dV_ID : editData.dV_ID)).map((item: any) => (
                                         <option key={item.id} value={item.p_ID}>{item.p_Name}</option>
                                     ))}
                                 </Form.Select>
                                 <Form.Control.Feedback type="invalid">
-                                    กรุณกรอกตำแหน่ง
+                                    กรุณากรอกตำแหน่ง
                                 </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col} md="6">
+
+                            <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>สถานะ</Form.Label>
-                                <Form.Control type="text" placeholder="สถานะ" name="status" required defaultValue={user.status} onChange={handleInputChange} />
+                                <Form.Select name="status" required defaultValue={editData.status} onChange={(e) => setStatus(e.target.value)}>
+                                    <option value="">เลือกสถานะ</option>
+                                    <option value="พนักงาน">พนักงาน</option>
+                                    <option value="ผู้ดูแลระบบ">ผู้ดูแลระบบ</option>
+                                    <option value="พ้นสถาพ">พ้นสถาพ</option>
+                                </Form.Select>
                                 <Form.Control.Feedback type="invalid">
-                                    กรุณกรอกนามสกุล
+                                    กรุณเลือกสถานะ
                                 </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="formFile" className="mb-2" md={6}>
+                                <Form.Label>โปรไฟล์</Form.Label>
+                                <Form.Control type="file" accept="image/*" onChange={handleFileUpload} />
+                            </Form.Group>
+                            <Form.Group as={Col} md={12} className="mb-2 text-center" >
+
+                                {imageUrl && <Image src={imageUrl} alt="Uploaded Image" width="110" thumbnail />}
+
                             </Form.Group>
                         </Row>
                         <Modal.Footer>
