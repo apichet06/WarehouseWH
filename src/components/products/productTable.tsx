@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Button, Card, Col, Container, Image, Row, Spinner } from "react-bootstrap"
+import { Button, Card, Col, Container, Image, Row } from "react-bootstrap"
 import ProductModals from "./productModals"
 import DataTable from 'react-data-table-component';
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import Swal from "sweetalert2";
-
+import { formatDate } from "../utility/dateUtils";
+import { showErrorAlert, showSuccessAlert } from "../utility/alertUtils";
 interface Props {
     api: string
 }
@@ -25,10 +26,13 @@ interface Product {
     unitOfMeasure: string;
     receiveAt: string;
     lastAt: string;
+    productType: {
+        typeName: string
+    }
 }
 
 interface FormData {
-    TypeID: string;
+    typeID: string;
     productName: string;
     productDescription: string;
     qtyMinimumStock: string;
@@ -38,23 +42,19 @@ interface FormData {
     imageFile: File | null; // หรืออื่น ๆ ที่เหมาะสมกับชนิดของ pImages
 }
 
-
 export default function ProductTable(props: Props) {
     const { api } = props
     const [data, setData] = useState<Product[]>([])
 
-
-
-
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [editId, setEditId] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     const field = {
-        TypeID: '',
+        typeID: '',
         productName: '',
         productDescription: '',
         qtyMinimumStock: '',
@@ -92,24 +92,13 @@ export default function ProductTable(props: Props) {
                 const apiUrl = editId ? `${api}/productAPI/${editId}` : `${api}/productAPI`;
                 const response = await (editId ? axios.put(apiUrl, formDataToSend) : axios.post(apiUrl, formDataToSend));
                 if (response.status === 200) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                    fetchData();
-                    setImageUrl(null);
-                    handleClose();
+                    await handleClose();
+                    await showSuccessAlert(response.data.message)
+                    await setImageUrl(null);
+                    await fetchData();
+
                 } else {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+                    showErrorAlert(response.data.message)
                 }
 
                 setValidated(false);
@@ -119,7 +108,6 @@ export default function ProductTable(props: Props) {
             }
         }
     };
-
 
 
     const handleInputChange = (event: any) => {
@@ -142,17 +130,13 @@ export default function ProductTable(props: Props) {
             setImageUrl(null); // No file selected, reset the imageUrl state
         }
 
-
     };
-
-
-
-
 
     const columns = [
         { name: 'ลำดับ', selector: (row: Product) => row.autoID, sortactive: true, width: '70px', },
         { name: 'รหัสสินค้า', selector: (row: Product) => row.productID, sortactive: true },
         { name: 'ชื่อสินค้า', selector: (row: Product) => row.productName, sortactive: true },
+        { name: 'ประเภทสินค้า', selector: (row: Product) => row.productType.typeName, sortactive: true },
         {
             name: 'รูปโปรไฟล์', cell: (row: Product) => (<>
                 {row.pImages ? (
@@ -163,8 +147,8 @@ export default function ProductTable(props: Props) {
         { name: 'จำนวนคงเหลือ', selector: (row: Product) => row.qtyInStock, sortactive: true },
         { name: 'ราคาต่อหน่วย', selector: (row: Product) => row.unitPrice, sortactive: true },
         { name: 'หน่วยนับ', selector: (row: Product) => row.unitOfMeasure, sortactive: true },
-        { name: 'วันที่รับสินค้า', selector: (row: Product) => row.receiveAt, sortactive: true },
-        { name: 'วันที่แก้ไขล่าสุด', selector: (row: Product) => row.lastAt, sortactive: true },
+        { name: 'วันที่รับสินค้า', selector: (row: Product) => row.receiveAt ? formatDate(row.receiveAt) : '-', sortactive: true },
+        { name: 'วันที่แก้ไขล่าสุด', selector: (row: Product) => row.lastAt ? formatDate(row.lastAt) : '-', sortactive: true },
         {
             name: "จัดการ",
             cell: (row: Product) => (
@@ -181,11 +165,10 @@ export default function ProductTable(props: Props) {
 
         const Data = await data.find(row => row.id === id);
 
-
         if (Data) {
             if (Data) {
                 setFormData({
-                    TypeID: Data.typeID,
+                    typeID: Data.typeID,
                     productName: Data.productName,
                     productDescription: Data.productDescription,
                     qtyMinimumStock: Data.qtyMinimumStock.toString(),
@@ -195,17 +178,13 @@ export default function ProductTable(props: Props) {
                     imageFile: null, // รีเซ็ตไฟล์รูปภาพให้ว่าง
                 });
 
-
                 setEditId(id.toString())
             }
             handleShow()
-
         }
     }
 
-
     const handleDelete = async (id: number) => {
-
         try {
             Swal.fire({
                 title: 'ยืนยันการลบ',
@@ -222,30 +201,20 @@ export default function ProductTable(props: Props) {
                         });
 
                         if (response.status === 200) {
-                            // แสดงข้อความเมื่อลบสำเร็จ
-                            Swal.fire(
-                                'Deleted!',
-                                response.data.message,
-                                'success'
-                            );
+
+                            showSuccessAlert(response.data.message)
                             // รีเฟรชข้อมูลหลังจากลบ
                             fetchData();
                         }
                     } catch (error: any) {
                         console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", error);
-                        // แสดงข้อความเมื่อเกิดข้อผิดพลาดในการลบข้อมูล
-                        Swal.fire(
-                            'Error!',
-                            error.response.message,
-                            'error'
-                        );
+                        showErrorAlert(error.response.data.message)
                     }
                 }
             });
         } catch (error) {
             console.log(error);
         }
-
 
     }
     const fetchData = useCallback(async () => {
@@ -255,13 +224,11 @@ export default function ProductTable(props: Props) {
                 const NewData = await response.data.result.map((item: any, index: any) => ({
                     ...item, autoID: index + 1
                 }))
-
                 setData(NewData)
-                setLoading(true)
+                setLoading(false)
             }
         } catch (error: any) {
             console.log(error.message);
-
         }
     }, [api])
 
@@ -275,7 +242,7 @@ export default function ProductTable(props: Props) {
             <ProductModals api={api} show={show} handleClose={handleClose} editId={editId} validated={validated}
                 handleSubmit={handleSubmit} handleInputChange={handleInputChange} handleFileChange={handleFileChange}
                 formData={formData} imageUrl={imageUrl} />
-            <Container>
+            <Container fluid>
                 <Row className="justify-content-center">
                     <Col md={12} className="text-end">
                         <Button variant="primary" onClick={() => { handleShow(), setEditId(''), setFormData(field) }}>
@@ -287,17 +254,12 @@ export default function ProductTable(props: Props) {
                         <Card className="shadow ">
                             <Card.Body>
                                 <Card.Text>ข้อมูลสินค้า</Card.Text>
-                                {loading ? (<DataTable
+                                <DataTable
                                     columns={columns}
                                     data={data}
                                     pagination
-                                />) : (
-                                    <div className="text-center">
-                                        <Spinner animation="border" role="status" >
-                                            <span className="visually-hidden">Loading...</span>
-                                        </Spinner>
-                                    </div>
-                                )}
+                                    progressPending={loading}
+                                />
                             </Card.Body>
                         </Card>
                     </Col>

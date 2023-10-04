@@ -60,6 +60,9 @@ export default function Menu(props: MenuProps) {
                   ข้อมูลผู้ใช้ระบบ
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/productType">
+                  ข้อมูลประเภทสินค้า
+                </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/products">
                   ข้อมูลสินค้า
                 </NavDropdown.Item>

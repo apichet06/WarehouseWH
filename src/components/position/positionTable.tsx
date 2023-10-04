@@ -6,7 +6,7 @@ import DataTable from "react-data-table-component";
 import PositionModals from "./positionModals";
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import Swal from "sweetalert2";
-
+import { showSuccessAlert, showErrorAlert } from "../utility/alertUtils";
 interface Props {
     api: string
 }
@@ -47,27 +47,12 @@ export default function PosisionTable(props: Props) {
     }, [fetchData])
 
     const columns = [ // Specify the type for columns
+        { name: '#', selector: (row: PositionData) => row.id, sortable: true, },
+        { name: 'รหัสตำแหน่ง', selector: (row: PositionData) => row.p_ID, sortable: true, },
+        { name: 'แผนก', selector: (row: PositionData) => row.dV_Name, sortable: true, },
+        { name: 'ตำแหน่ง', selector: (row: PositionData) => row.p_Name, sortable: true, },
         {
-            name: '#', selector: (row: PositionData) => row.id, sortable: true,
-        },
-        {
-            name: 'รหัสตำแหน่ง',
-            selector: (row: PositionData) => row.p_ID,
-            sortable: true,
-        },
-        {
-            name: 'แผนก',
-            selector: (row: PositionData) => row.dV_Name,
-            sortable: true,
-        },
-        {
-            name: 'ตำแหน่ง',
-            selector: (row: PositionData) => row.p_Name,
-            sortable: true,
-        },
-        {
-            name: "จัดการ",
-            cell: (row: PositionData) => (
+            name: "จัดการ", cell: (row: PositionData) => (
                 <>
                     <a onClick={() => { handleEdit(row.id); }} className="text-warning" >
                         <BsPencilFill />
@@ -80,7 +65,6 @@ export default function PosisionTable(props: Props) {
             ),
         },
     ];
-
 
     const [validated, setValidated] = useState(false);
 
@@ -99,27 +83,16 @@ export default function PosisionTable(props: Props) {
                 const apiUrl = editId ? `${api}/positionAPI/${editId}` : `${api}/positionAPI`;
                 const response = await (editId ? axios.put(apiUrl, formData) : axios.post(apiUrl, formData));
                 if (response.status === 200) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+                    showSuccessAlert(response.data.message)
                     fetchData();
                     handleClose();
                 } else {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+                    showErrorAlert(response.data.message)
                 }
 
-            } catch (error) {
+            } catch (error: any) {
                 console.error("Error sending data to the API", error);
+                showErrorAlert(error)
             }
 
         }
@@ -155,23 +128,12 @@ export default function PosisionTable(props: Props) {
                     });
 
                     if (response.status === 200) {
-                        // แสดงข้อความเมื่อลบสำเร็จ
-                        Swal.fire(
-                            'Deleted!',
-                            response.data.message,
-                            'success'
-                        );
-                        // รีเฟรชข้อมูลหลังจากลบ
+                        showSuccessAlert(response.data.message)
                         fetchData();
                     }
                 } catch (error: any) {
                     console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", error);
-                    // แสดงข้อความเมื่อเกิดข้อผิดพลาดในการลบข้อมูล
-                    Swal.fire(
-                        'Error!',
-                        error.response.message,
-                        'error'
-                    );
+                    showErrorAlert(error)
                 }
             }
         });
@@ -181,13 +143,14 @@ export default function PosisionTable(props: Props) {
         <>
             <Container>
                 <Row className="justify-content-center">
-                    <Col md={7} className="mb-3 text-end">
+                    <Col md={7} className="mb-2 text-end">
                         <Button variant="primary" onClick={handleShow}>
                             เพิ่ม
                         </Button>
+                        <hr />
                     </Col>
                     <Col md={7}>
-                        <Card>
+                        <Card className="shadow">
                             <Card.Body>
                                 <Card.Text>ข้อมูลแหน่ง</Card.Text>
                                 <DataTable

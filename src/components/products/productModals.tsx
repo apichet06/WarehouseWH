@@ -43,16 +43,15 @@ export default function ProductModals(props: Props) {
         fetchtype()
     }, [fetchtype])
     const handleSelectChange = (selectedOption: any) => {
-        // นี่คือ selectedOption ที่ผู้ใช้เลือกใน Select
+        // selectedOption ที่ผู้ใช้เลือกใน Select
         const name = 'typeID'; // ชื่อฟิลด์ที่คุณต้องการเปลี่ยนแปลง
-        const value = selectedOption ? selectedOption.value : ''; // ค่าที่คุณต้องการเก็บ
+        const value = selectedOption ? selectedOption.value : ''; // ค่าที่ต้องการเก็บ
 
-        // เรียก handleInputChange เพื่อเปลี่ยนแปลงค่าใน state ของคุณ
+        // เรียก handleInputChange เพื่อเปลี่ยนแปลงค่าใน state
         handleInputChange({ target: { name, value } });
     };
     return (
         <>
-            {api}
             <Modal
                 show={show}
                 onHide={handleClose}
@@ -74,6 +73,8 @@ export default function ProductModals(props: Props) {
                                     placeholder="กรอกชื่อสินค้า"
                                     value={formData.productName}
                                     onChange={handleInputChange}
+                                    autoComplete="off"
+                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณากรอกชื่อสินค้า
@@ -88,6 +89,7 @@ export default function ProductModals(props: Props) {
                                     value={formData.productDescription}
                                     onChange={handleInputChange}
                                     required
+                                    autoComplete="off"
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณากรอกรายละเอียดชื่อสินค้า
@@ -96,10 +98,11 @@ export default function ProductModals(props: Props) {
                             <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>ประเภทสินค้า</Form.Label>
                                 <Select
-                                    defaultValue={formData.typeID}
+                                    defaultValue={
+                                        options.find((option: any) => option.value === formData.typeID) // หา option ที่มี value เท่ากับ formData.typeID
+                                    }
                                     onChange={handleSelectChange}
                                     options={options}
-                                    required
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณาเลือกประเภทสินค้า
@@ -114,6 +117,7 @@ export default function ProductModals(props: Props) {
                                     value={formData.qtyMinimumStock}
                                     onChange={handleInputChange}
                                     required
+                                    autoComplete="off"
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณากรอกจำนวนสินค้าน้อยที่สุด
@@ -129,6 +133,7 @@ export default function ProductModals(props: Props) {
                                     value={formData.qtyInStock}
                                     onChange={handleInputChange}
                                     required
+
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     กรุณากรอกจำนวนสินค้าที่นำเข้า
@@ -151,15 +156,15 @@ export default function ProductModals(props: Props) {
                             <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>หน่วยนับ</Form.Label>
                                 <Form.Select aria-label="Default select example" value={formData.unitOfMeasure}
-                                    onChange={handleInputChange} name="unitOfMeasure">
-                                    <option>--- เลือกหน่วยนับ ---</option>
+                                    onChange={handleInputChange} name="unitOfMeasure" required>
+                                    <option value="">--- เลือกหน่วยนับ ---</option>
                                     <option value="ชิ้น">ชิ้น</option>
                                     <option value="กิโลกรัม">กิโลกรัม</option>
                                     <option value="เมตร">เมตร</option>
                                     <option value="ตารางเมตร">ตารางเมตร</option>
                                     <option value="ลูก">ลูก</option>
                                     <option value="ห่อ">ห่อ</option>
-                                    <option value="กล่อง">กล่อง</option>
+                                    <option value="แท่ง">แท่ง</option>
                                     <option value="กล่อง">กล่อง</option>
                                     <option value="โหล">โหล</option>
                                     <option value="ตัว">ตัว</option>

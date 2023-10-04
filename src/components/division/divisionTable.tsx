@@ -6,7 +6,7 @@ import DataTable from "react-data-table-component";
 import DivisionModal from "./divisionModals";
 import { BsPencilFill, BsFillTrash3Fill } from "react-icons/bs";
 import Swal from "sweetalert2";
-
+import { showSuccessAlert, showErrorAlert } from "../utility/alertUtils";
 
 interface Props {
    api: string;
@@ -23,7 +23,7 @@ export default function DivisionTable(props: Props) {
    const [show, setShow] = useState(false);
    const [editBt, setEditBt] = useState("");
    const [divisionName, setDivisionName] = useState("");
-
+   const [loading, setLoading] = useState(true);
 
    const handleClose = () => setShow(false);
    const handleShow = () => setShow(true);
@@ -77,11 +77,7 @@ export default function DivisionTable(props: Props) {
 
                if (response.status === 200) {
                   // แสดงข้อความเมื่อลบสำเร็จ
-                  Swal.fire(
-                     'Deleted!',
-                     response.data.message,
-                     'success'
-                  );
+                  showSuccessAlert(response.data.message)
                   // รีเฟรชข้อมูลหลังจากลบ
                   fetchData();
 
@@ -89,11 +85,7 @@ export default function DivisionTable(props: Props) {
             } catch (error: any) {
                console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", error);
                // แสดงข้อความเมื่อเกิดข้อผิดพลาดในการลบข้อมูล
-               Swal.fire(
-                  'Error!',
-                  error.response.message,
-                  'error'
-               );
+               showErrorAlert(error)
             }
          }
       });
@@ -106,6 +98,7 @@ export default function DivisionTable(props: Props) {
          if (typeof response.data === "object") {
             const data = response.data.result as DivisionData[];
             setData(data);
+            setLoading(false);
          } else {
             console.log("ข้อมูลไม่ถูกต้อง");
          }
@@ -139,7 +132,7 @@ export default function DivisionTable(props: Props) {
                   <Card className="shadow">
                      <Card.Body>
                         <Card.Title>ข้อมูลแผนกทั้งหมด</Card.Title>
-                        <DataTable columns={columns} data={data} pagination />
+                        <DataTable columns={columns} data={data} pagination progressPending={loading} />
                      </Card.Body>
                   </Card>
                </Col>

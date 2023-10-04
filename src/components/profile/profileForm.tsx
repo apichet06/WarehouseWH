@@ -2,7 +2,7 @@
 import axios from "axios"
 import { useRef, useState } from "react"
 import { Button, Card, Col, Container, Form, Image, Row, Table } from "react-bootstrap"
-
+import { showErrorAlert, showSuccessAlert } from "../utility/alertUtils"
 import Swal from "sweetalert2"
 
 interface Props {
@@ -28,13 +28,7 @@ export default function ProfileFrom(props: Props) {
                 try {
                     const response = await axios.put(api + "/UsersAPI/ChangePassword/" + result.id, { password })
                     if (response.status === 200) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
+                        showSuccessAlert(response.data.message)
                         setpassword('')
                         setConfirmpassword('')
                         formRef.current?.reset();
@@ -42,20 +36,13 @@ export default function ProfileFrom(props: Props) {
                     }
                 } catch (error: any) {
 
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: error.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-
+                    showErrorAlert(error.response.data.message)
                 }
             } else {
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: 'กรอหรือหัสผ่านไม่ตรงกัน!',
+                    title: 'กรอกหรือหัสผ่านไม่ตรงกัน!',
                     showConfirmButton: true,
                 });
             }

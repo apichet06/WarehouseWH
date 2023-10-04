@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Card, Col, Container, Image, Row } from "react-bootstrap";
 import UsersModals from "./userModals";
+
 import { ChangeEvent, FormEvent, useCallback, useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import Swal from "sweetalert2";
+import { formatDate } from "../utility/dateUtils";
+import { showSuccessAlert, showErrorAlert } from '../utility/alertUtils';
 // แสดงข้อมูล Datatables
 interface UsersData {
     autoId: number,
@@ -20,6 +23,7 @@ interface UsersData {
     p_Name: string,
     p_ID: string,
     status: string,
+    date: string,
     division: {
         dV_ID: string;
         dV_Name: string;
@@ -57,7 +61,7 @@ export default function UsersTable(props: Props) {
     const [dV_ID, setDV_ID] = useState('');
     const [p_ID, setP_ID] = useState('');
     const [status, setStatus] = useState('');
-
+    const [loading, setLoading] = useState(true);
 
     const [data, setData] = useState<UsersData[]>([]);
     const [validated, setValidated] = useState(false);
@@ -82,7 +86,6 @@ export default function UsersTable(props: Props) {
         }
     };
 
-
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
@@ -106,24 +109,12 @@ export default function UsersTable(props: Props) {
                 const apiUrl = editId ? `${api}/UsersAPI/${editId}` : `${api}/UsersAPI`;
                 const response = await (editId ? axios.put(apiUrl, formData) : axios.post(apiUrl, formData));
                 if (response.status === 200) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+                    showSuccessAlert(response.data.message)
                     fetchData();
                     setImageUrl(null);
                     handleClose();
                 } else {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: response.data.message,
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
+                    showErrorAlert(response.data.message)
                 }
             } catch (error) {
                 console.error("Error sending data to the API", error);
@@ -132,7 +123,6 @@ export default function UsersTable(props: Props) {
 
         setValidated(true);
     };
-
 
     const handleEdit = async (id: number) => {
 
@@ -171,23 +161,13 @@ export default function UsersTable(props: Props) {
                         });
 
                         if (response.status === 200) {
-                            // แสดงข้อความเมื่อลบสำเร็จ
-                            Swal.fire(
-                                'Deleted!',
-                                response.data.message,
-                                'success'
-                            );
+                            showSuccessAlert(response.data.message)
                             // รีเฟรชข้อมูลหลังจากลบ
                             fetchData();
                         }
                     } catch (error: any) {
                         console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", error);
-                        // แสดงข้อความเมื่อเกิดข้อผิดพลาดในการลบข้อมูล
-                        Swal.fire(
-                            'Error!',
-                            error.response.message,
-                            'error'
-                        );
+                        showErrorAlert(error.response.message)
                     }
                 }
             });
@@ -203,12 +183,13 @@ export default function UsersTable(props: Props) {
                 const newData = response.data.result.map((item: any, index: number) => ({
                     ...item, autoId: index + 1
                 }))
-
                 setData(newData)
+                setLoading(false)
             }
 
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            showErrorAlert(error),
+                console.log(error);
         }
     }, [api])
 
@@ -229,6 +210,7 @@ export default function UsersTable(props: Props) {
         },
         { name: 'แผนก', selector: (row: UsersData) => row.division.dV_Name, sortable: true },
         { name: 'ตำแหน่ง', selector: (row: UsersData) => row.position.p_Name, sortable: true, },
+        { name: 'วันที่', selector: (row: UsersData) => row.date ? formatDate(row.date) : '-', sortable: true, },
         {
             name: "จัดการ",
             cell: (row: UsersData) => (
@@ -245,7 +227,7 @@ export default function UsersTable(props: Props) {
         <>
             <Container>
                 <Row className="justify-content-center">
-                    <Col md={10} className="text-end my-3">
+                    <Col md={11} className="text-end mb-2">
                         <Button variant="primary" onClick={() => {
                             handleShow();
                             setEditID('')
@@ -259,11 +241,11 @@ export default function UsersTable(props: Props) {
                         </Button>
                         <hr />
                     </Col>
-                    <Col md={10}>
-                        <Card>
+                    <Col md={11}>
+                        <Card className="shadow">
                             <Card.Body>
                                 <Card.Text>ข้อมูลสมาชิก </Card.Text>
-                                <DataTable columns={columns} data={data} />
+                                <DataTable columns={columns} data={data} progressPending={loading} />
                             </Card.Body>
                         </Card>
                     </Col>

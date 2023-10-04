@@ -2,8 +2,8 @@
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { useState, FormEvent } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
 
+import { showErrorAlert, showSuccessAlert } from "../utility/alertUtils";
 interface DivisionModalProps {
     api: string;
     show: boolean;
@@ -26,92 +26,33 @@ export default function DivisionModal(props: DivisionModalProps) {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         } else {
-            // ทำบันทึกหรือแก้ไขแผนกของคุณที่นี่
-            if (editBt) {
-                console.log(editBt);
+            // ทำบันทึกหรือแก้ไขแผนกของคุณที่นี่ 
+            // ส่งค่า divisionName ไปยังฟังก์ชันแก้ไข
+            try {
 
-                // ส่งค่า divisionName ไปยังฟังก์ชันแก้ไข
-                try {
-                    const response = await axios.put(`${api}/DivisionAPI/${editBt}`, { DV_name: divisionName },
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    );
-
-                    if (response.status === 200) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-
-                        fetchData();
-
-                    } else {
-                        console.log("รหัส HTTP ไม่ถูกต้อง:", response.status);
-                    }
-
-                } catch (error: any) {
-                    if (error.response && error.response.data && error.response.data.message) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: error.response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                    } else {
-                        console.error("เกิดข้อผิดพลาดในการส่งคำร้องขอ:", error);
-                    }
+                const FormData = {
+                    DV_name: divisionName
                 }
 
+                const response = editBt ? await axios.put(`${api}/DivisionAPI/${editBt}`, FormData) : await axios.post(`${api}/DivisionAPI/`, FormData);
 
-                console.log("แก้ไขแผนก: ", divisionName);
-            } else {
+                if (response.status === 200) {
+                    showSuccessAlert(response.data.message)
 
-                try {
-                    const response = await axios.post(`${api}/DivisionAPI`, { DV_name: divisionName },
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                        }
-                    );
+                    fetchData();
 
-                    if (response.status === 200) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-
-                        fetchData();
-
-                    } else {
-                        console.log("รหัส HTTP ไม่ถูกต้อง:", response.status);
-                    }
-
-                } catch (error: any) {
-                    if (error.response && error.response.data && error.response.data.message) {
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: error.response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
-                        });
-                    } else {
-                        console.error("เกิดข้อผิดพลาดในการส่งคำร้องขอ:", error);
-                    }
+                } else {
+                    showErrorAlert(response.data.message)
                 }
 
+            } catch (error: any) {
+                if (error.response && error.response.data && error.response.data.message) {
+                    showErrorAlert(error.response.data.message)
+                } else {
+                    console.error("เกิดข้อผิดพลาดในการส่งคำร้องขอ:", error);
+                }
             }
+
             handleClose(); // ปิด Modal หลังจากบันทึกหรือแก้ไข
         }
 
