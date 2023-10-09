@@ -1,5 +1,6 @@
 import Menu from "../headers/menu";
 import Footer from "../footer/footer";
+import IncommingStockTable from "./incomingstockTable";
 interface IncomingstockProps {
   api: string;
 }
@@ -9,6 +10,7 @@ export default function Incomingstock(props: IncomingstockProps) {
   return (
     <>
       <Menu api={api} />
+      <IncommingStockTable api={api} />
       <Footer />
     </>
   );

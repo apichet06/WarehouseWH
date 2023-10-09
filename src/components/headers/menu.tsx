@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { Badge, Container, Image, Nav, NavDropdown, Navbar } from "react-bootstrap";
+import { BsCartPlusFill } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 
 interface MenuProps {
@@ -69,6 +70,9 @@ export default function Menu(props: MenuProps) {
               </NavDropdown>
             </Nav>
             <Nav>
+              <Link to="/checkapproval" className="nav-link">
+                <BsCartPlusFill className="text-warning" /><Badge bg="warning" pill>0</Badge>
+              </Link>
               <NavDropdown
                 title={
                   <Image
@@ -80,6 +84,7 @@ export default function Menu(props: MenuProps) {
                 }
                 id="collapsible-nav-dropdown"
               >
+
                 <NavDropdown.Item as={Link} to="/profile">
                   ข้อมูลส่วนตัว
                 </NavDropdown.Item>

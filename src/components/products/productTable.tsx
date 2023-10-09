@@ -52,7 +52,7 @@ export default function ProductTable(props: Props) {
     const [loading, setLoading] = useState(true);
     const [editId, setEditId] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
-
+    const [alertType, setAlertType] = useState('');
     const field = {
         typeID: '',
         productName: '',
@@ -69,16 +69,16 @@ export default function ProductTable(props: Props) {
 
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;
+        event.preventDefault();
+
         if (form.checkValidity() === false) {
-            event.preventDefault();
             event.stopPropagation();
+            setAlertType(formData.typeID)
         }
 
         setValidated(true);
-
         if (form.checkValidity() === true) {
             try {
-                event.preventDefault();
 
                 const formDataToSend = new FormData();
 
@@ -100,7 +100,6 @@ export default function ProductTable(props: Props) {
                 } else {
                     showErrorAlert(response.data.message)
                 }
-
                 setValidated(false);
             } catch (error) {
                 console.error('Error posting data:', error);
@@ -109,7 +108,6 @@ export default function ProductTable(props: Props) {
         }
     };
 
-
     const handleInputChange = (event: any) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
@@ -117,6 +115,7 @@ export default function ProductTable(props: Props) {
 
     const handleFileChange = (event: any) => {
         const file = event.target.files[0];
+
         if (file) {
 
             setFormData({ ...formData, imageFile: file });
@@ -177,7 +176,7 @@ export default function ProductTable(props: Props) {
                     unitOfMeasure: Data.unitOfMeasure,
                     imageFile: null, // รีเซ็ตไฟล์รูปภาพให้ว่าง
                 });
-
+                setAlertType(Data.typeID)
                 setEditId(id.toString())
             }
             handleShow()
@@ -202,9 +201,9 @@ export default function ProductTable(props: Props) {
 
                         if (response.status === 200) {
 
-                            showSuccessAlert(response.data.message)
+                            await showSuccessAlert(response.data.message)
                             // รีเฟรชข้อมูลหลังจากลบ
-                            fetchData();
+                            await fetchData();
                         }
                     } catch (error: any) {
                         console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", error);
@@ -236,12 +235,11 @@ export default function ProductTable(props: Props) {
         fetchData()
     }, [fetchData])
 
-
     return (
         <>
             <ProductModals api={api} show={show} handleClose={handleClose} editId={editId} validated={validated}
                 handleSubmit={handleSubmit} handleInputChange={handleInputChange} handleFileChange={handleFileChange}
-                formData={formData} imageUrl={imageUrl} />
+                formData={formData} imageUrl={imageUrl} alertType={alertType} />
             <Container fluid>
                 <Row className="justify-content-center">
                     <Col md={12} className="text-end">
@@ -251,7 +249,7 @@ export default function ProductTable(props: Props) {
                         <hr />
                     </Col>
                     <Col md={12}>
-                        <Card className="shadow ">
+                        <Card className="shadow">
                             <Card.Body>
                                 <Card.Text>ข้อมูลสินค้า</Card.Text>
                                 <DataTable
@@ -265,8 +263,6 @@ export default function ProductTable(props: Props) {
                     </Col>
                 </Row>
             </Container>
-
-
         </>
 
     )

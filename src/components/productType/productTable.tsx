@@ -165,6 +165,7 @@ export default function ProductTable(props: Props) {
                                     columns={columns}
                                     data={data}
                                     progressPending={loading}
+                                    pagination
                                 />
                             </Card.Body>
                         </Card>

@@ -15,11 +15,11 @@ interface Props {
     handleFileChange: any
     formData: any
     imageUrl: string | null
-
+    alertType: string
 }
 
 export default function ProductModals(props: Props) {
-    const { api, show, handleClose, editId, validated, handleSubmit, handleInputChange, handleFileChange, formData, imageUrl } = props;
+    const { api, show, handleClose, editId, validated, handleSubmit, handleInputChange, handleFileChange, formData, imageUrl, alertType } = props;
     const [options, setOptions] = useState([]);
 
     const fetchtype = useCallback(async () => {
@@ -104,9 +104,7 @@ export default function ProductModals(props: Props) {
                                     onChange={handleSelectChange}
                                     options={options}
                                 />
-                                <Form.Control.Feedback type="invalid">
-                                    กรุณาเลือกประเภทสินค้า
-                                </Form.Control.Feedback>
+                                <span className='text-danger small'>{alertType ? "" : "กรุณาเลือกประเภทสินค้า"}</span>
                             </Form.Group>
                             <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>จำนวนสินค้าน้อยที่สุด</Form.Label>

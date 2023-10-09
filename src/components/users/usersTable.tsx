@@ -245,7 +245,7 @@ export default function UsersTable(props: Props) {
                         <Card className="shadow">
                             <Card.Body>
                                 <Card.Text>ข้อมูลสมาชิก </Card.Text>
-                                <DataTable columns={columns} data={data} progressPending={loading} />
+                                <DataTable columns={columns} data={data} progressPending={loading} pagination />
                             </Card.Body>
                         </Card>
                     </Col>
