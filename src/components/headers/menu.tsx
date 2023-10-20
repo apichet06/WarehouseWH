@@ -44,8 +44,8 @@ export default function Menu(props: MenuProps) {
               <Nav.Link as={Link} to="/home" className="nav-link">
                 หน้าหลัก
               </Nav.Link>
-              <Link to="/checkapproval" className="nav-link">
-                รายการรออนุมัติการเบิก
+              <Link to="/productlist" className="nav-link">
+                รายการสินค้า
               </Link>
               <Link to="/incomingstock" className="nav-link">
                 นำเข้าสินค้า
@@ -84,7 +84,6 @@ export default function Menu(props: MenuProps) {
                 }
                 id="collapsible-nav-dropdown"
               >
-
                 <NavDropdown.Item as={Link} to="/profile">
                   ข้อมูลส่วนตัว
                 </NavDropdown.Item>

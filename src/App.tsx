@@ -9,6 +9,7 @@ import Incomingstock from "./components/incommingStock/incomingstock";
 import OutgoingStock from "./components/outgoingStock/outgoingstock";
 import Profile from "./components/profile/profile";
 import ProductType from "./components/productType/productType";
+import ProductList from "./components/productList/productlist";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -29,6 +30,7 @@ function App() {
         <Route path="/outgoingstock" element={<OutgoingStock api={api} />} />
         <Route path="/profile" element={<Profile api={api} />} />
         <Route path="/productType" element={<ProductType api={api} />} />
+        <Route path="/productlist" element={<ProductList api={api} />} />
       </Routes>
     </Router>
   );
