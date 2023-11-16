@@ -54,13 +54,13 @@ export default function PosisionTable(props: Props) {
         {
             name: "จัดการ", cell: (row: PositionData) => (
                 <>
-                    <a onClick={() => { handleEdit(row.id); }} className="text-warning" >
+                    <Button onClick={() => { handleEdit(row.id); }} variant="outline-warning" size="sm" >
                         <BsPencilFill />
-                    </a>
+                    </Button>
                     &nbsp; &nbsp;
-                    <a onClick={() => handleDelete(row.id)} className="text-danger">
+                    <Button onClick={() => handleDelete(row.id)} variant="outline-danger" size="sm">
                         <BsFillTrash3Fill />
-                    </a>
+                    </Button>
                 </>
             ),
         },

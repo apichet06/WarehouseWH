@@ -118,18 +118,18 @@ export default function IncommingStockTable(props: Props) {
         { name: 'ลำดับ', selector: (row: incomingstocks) => row.autoID, width: '70px' },
         { name: 'รหัสนำเข้า', selector: (row: incomingstocks) => row.incomingStockID },
         { name: 'รหัสสินค้า', selector: (row: incomingstocks) => row.productID },
-        { name: 'ชื่อสินค้า', selector: (row: incomingstocks) => row.product.productName },
+        { name: 'ชื่อสินค้า', selector: (row: incomingstocks) => row.product.productName, width: '200px' },
         { name: 'จำนวนนำเข้า', selector: (row: incomingstocks) => row.qtyReceived },
         { name: 'หน่วย', selector: (row: incomingstocks) => row.product.unitOfMeasure },
-        { name: 'ราคาต่อหน่วย', selector: (row: incomingstocks) => row.unitPriceReceived },
+        { name: 'ราคาต่อหน่วย', selector: (row: incomingstocks) => row.unitPriceReceived.toLocaleString() },
         { name: 'หน่วย', selector: (row: incomingstocks) => ' บาท/' + row.product.unitOfMeasure, },
         { name: 'ผู้นำเข้า', selector: (row: incomingstocks) => row.users.firstName + ' ' + row.users.lastName },
         { name: 'วันที่นำเข้า', selector: (row: incomingstocks) => formatDate(row.receivedDate), width: '160px' },
         {
             name: 'จัดการ', cell: (row: incomingstocks) => (<>
-                <a onClick={() => handleDelete(row.id)} className="text-danger">
+                <Button onClick={() => handleDelete(row.id)} variant="outline-danger" size="sm">
                     <BsFillTrash3Fill />
-                </a>
+                </Button>
             </>)
         }
     ];
@@ -162,13 +162,13 @@ export default function IncommingStockTable(props: Props) {
                 alertProduct={alertProduct} handleinputChange={handleinputChange} setAlertProduct={setAlertProduct} />
             <Container fluid>
                 <Row className="justify-content-center">
-                    <Col md={12} className="mb-2 text-end">
+                    <Col md={11} className="mb-2 text-end">
                         <Button variant="primary" onClick={() => { handleShow(), setAlertProduct('0'), setValidated(false) }}>
                             เพิ่มข้อมูล
                         </Button>
                         <hr />
                     </Col>
-                    <Col md={12}>
+                    <Col md={11}>
                         <Card className="shadow">
                             <Card.Body>
                                 <Card.Text>รายการสินค้าที่นำเข้า</Card.Text>

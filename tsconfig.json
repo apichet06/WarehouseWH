@@ -21,6 +21,10 @@
     "noFallthroughCasesInSwitch": true
   },
   // "include": ["src"],
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/components/home/createChart.js"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

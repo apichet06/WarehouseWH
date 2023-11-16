@@ -169,6 +169,8 @@ export default function ProductModals(props: Props) {
                                     <option value="ลูก">ลูก</option>
                                     <option value="ชุด">ชุด</option>
                                     <option value="คู่">คู่</option>
+                                    <option value="อัน">อัน</option>
+                                    <option value="เล่ม">เล่ม</option>
                                 </Form.Select>
                                 <Form.Control.Feedback type="invalid">
                                     กรุณากรอกหน่วยนับ

@@ -69,13 +69,9 @@ export default function ProductTable(props: Props) {
             name: "จัดการ",
             cell: (row: ProductType) => (
                 <>
-                    <a onClick={() => { handleEdit(row.id); }} className="text-warning" >
-                        <BsPencilFill />
-                    </a>
+                    <Button onClick={() => { handleEdit(row.id); }} variant="outline-warning" size="sm" ><BsPencilFill /></Button>
                     &nbsp; &nbsp;
-                    <a onClick={() => handleDelete(row.typeID)} className="text-danger">
-                        <BsFillTrash3Fill />
-                    </a>
+                    <Button onClick={() => handleDelete(row.typeID)} variant="outline-danger" size="sm"> <BsFillTrash3Fill /></Button>
                 </>
             ),
         },

@@ -33,7 +33,6 @@ export default function ProductlistMadals(props: Props) {
         }
     }
 
-
     return (
         <>
 
@@ -86,7 +85,7 @@ export default function ProductlistMadals(props: Props) {
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" size="sm" onClick={handleClose}> ปิด </Button>
+                    <Button variant="secondary" size="sm" onClick={handleClose}>ปิด</Button>
                 </Modal.Footer>
             </Modal>
 

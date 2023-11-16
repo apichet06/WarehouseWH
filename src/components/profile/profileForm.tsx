@@ -10,7 +10,6 @@ interface Props {
 }
 export default function ProfileFrom(props: Props) {
     const { api } = props
-
     const result: any = JSON.parse(localStorage.getItem("resulte") || "{}")
     const [password, setpassword] = useState('');
     const [confirmpassword, setConfirmpassword] = useState('');

@@ -122,11 +122,11 @@ export default function ProductTable(props: Props) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const result = reader.result as string;
-                setImageUrl(result); // Set the URL string to imageUrl
+                setImageUrl(result);
             };
             reader.readAsDataURL(file);
         } else {
-            setImageUrl(null); // No file selected, reset the imageUrl state
+            setImageUrl(null);
         }
 
     };
@@ -143,8 +143,9 @@ export default function ProductTable(props: Props) {
                 ) : (<span>No image</span>)}</>)
         },
         { name: 'รายละเอียด', selector: (row: Product) => row.productDescription, sortactive: true },
+        { name: 'จำนวนที่ควรมี', selector: (row: Product) => row.qtyMinimumStock, sortactive: true },
         { name: 'จำนวนคงเหลือ', selector: (row: Product) => row.qtyInStock, sortactive: true },
-        { name: 'ราคาต่อหน่วย', selector: (row: Product) => row.unitPrice, sortactive: true },
+        { name: 'ราคาต่อหน่วย', selector: (row: Product) => row.unitPrice.toLocaleString(), sortactive: true },
         { name: 'หน่วยนับ', selector: (row: Product) => row.unitOfMeasure, sortactive: true },
         { name: 'วันที่รับสินค้า', selector: (row: Product) => row.receiveAt ? formatDate(row.receiveAt) : '-', sortactive: true },
         { name: 'วันที่แก้ไขล่าสุด', selector: (row: Product) => row.lastAt ? formatDate(row.lastAt) : '-', sortactive: true },
@@ -152,11 +153,11 @@ export default function ProductTable(props: Props) {
             name: "จัดการ",
             cell: (row: Product) => (
                 <>
-                    <a onClick={() => { handleEdit(row.id); }} className="text-warning" ><BsPencilFill /></a>
+                    <Button onClick={() => { handleEdit(row.id); }} variant="outline-warning" size="sm"><BsPencilFill /></Button>
                     &nbsp; &nbsp;
-                    <a onClick={() => handleDelete(row.id)} className="text-danger"><BsFillTrash3Fill /></a>
+                    <Button onClick={() => handleDelete(row.id)} variant="outline-danger" size="sm"><BsFillTrash3Fill /></Button>
                 </>
-            ),
+            ), center: true
         },
     ];
 

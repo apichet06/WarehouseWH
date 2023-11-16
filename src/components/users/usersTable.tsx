@@ -210,14 +210,15 @@ export default function UsersTable(props: Props) {
         },
         { name: 'แผนก', selector: (row: UsersData) => row.division.dV_Name, sortable: true },
         { name: 'ตำแหน่ง', selector: (row: UsersData) => row.position.p_Name, sortable: true, },
+        { name: 'สถานะ', selector: (row: UsersData) => row.status, sortable: true },
         { name: 'วันที่', selector: (row: UsersData) => row.date ? formatDate(row.date) : '-', sortable: true, },
         {
             name: "จัดการ",
             cell: (row: UsersData) => (
                 <>
-                    <a onClick={() => { handleEdit(row.id); }} className="text-warning" ><BsPencilFill /></a>
+                    <Button onClick={() => { handleEdit(row.id); }} variant="outline-warning" size="sm" ><BsPencilFill /></Button>
                     &nbsp; &nbsp;
-                    <a onClick={() => handleDelete(row.id)} className="text-danger"><BsFillTrash3Fill /></a>
+                    <Button onClick={() => handleDelete(row.id)} variant="outline-danger" size="sm"><BsFillTrash3Fill /></Button>
                 </>
             ),
         },
