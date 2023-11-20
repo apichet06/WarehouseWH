@@ -87,6 +87,8 @@ export default function ApprovedTable(props: Props) {
     const [pendingProduct, setPendingProduct] = useState(true);
     const [pickingGoodsDetails, setPickingGoodsDetails] = useState([]);
     const [key, setKey] = useState('home');
+
+
     const handleSubmit = async (status: string, order: string) => {
         try {
             const Data = {

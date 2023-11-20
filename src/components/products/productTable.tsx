@@ -52,7 +52,11 @@ export default function ProductTable(props: Props) {
     const [loading, setLoading] = useState(true);
     const [editId, setEditId] = useState('');
     const [imageUrl, setImageUrl] = useState<string | null>(null);
-    const [alertType, setAlertType] = useState('');
+    const [alertType, setAlertType] = useState<string | null>(null);
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false);
+
+
+
     const field = {
         typeID: '',
         productName: '',
@@ -79,6 +83,7 @@ export default function ProductTable(props: Props) {
         setValidated(true);
         if (form.checkValidity() === true) {
             try {
+                await setLoadingOnsubmit(true);
 
                 const formDataToSend = new FormData();
 
@@ -96,7 +101,7 @@ export default function ProductTable(props: Props) {
                     await showSuccessAlert(response.data.message)
                     await setImageUrl(null);
                     await fetchData();
-
+                    await setLoadingOnsubmit(false);
                 } else {
                     showErrorAlert(response.data.message)
                 }
@@ -162,7 +167,6 @@ export default function ProductTable(props: Props) {
     ];
 
     const handleEdit = async (id: number) => {
-
         const Data = await data.find(row => row.id === id);
 
         if (Data) {
@@ -201,7 +205,6 @@ export default function ProductTable(props: Props) {
                         });
 
                         if (response.status === 200) {
-
                             await showSuccessAlert(response.data.message)
                             // รีเฟรชข้อมูลหลังจากลบ
                             await fetchData();
@@ -240,11 +243,11 @@ export default function ProductTable(props: Props) {
         <>
             <ProductModals api={api} show={show} handleClose={handleClose} editId={editId} validated={validated}
                 handleSubmit={handleSubmit} handleInputChange={handleInputChange} handleFileChange={handleFileChange}
-                formData={formData} imageUrl={imageUrl} alertType={alertType} />
+                formData={formData} imageUrl={imageUrl} alertType={alertType} loadingOnsubmit={loadingOnsubmit} setAlertType={setAlertType} />
             <Container fluid>
                 <Row className="justify-content-center">
                     <Col md={12} className="text-end">
-                        <Button variant="primary" onClick={() => { handleShow(), setEditId(''), setFormData(field) }}>
+                        <Button variant="primary" onClick={() => { handleShow(), setEditId(''), setFormData(field), setAlertType(null) }}>
                             เพิ่มข้อมูล
                         </Button>
                         <hr />

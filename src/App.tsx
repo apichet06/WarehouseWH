@@ -18,7 +18,9 @@ import Approved from "./components/approved/approved";
 
 
 function App() {
-  const api = "http://localhost:8081/WHAPI/api";
+  //const api = "http://localhost:8081/WHAPI/api";
+  const api = "https://warehouseapi20231118.azurewebsites.net/api";
+
   return (
     <Router>
       <AppProvider>

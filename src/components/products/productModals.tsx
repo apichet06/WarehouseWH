@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Image, Modal, Row, Spinner } from "react-bootstrap";
 import Select from 'react-select';
 interface Props {
     api: string
@@ -15,11 +15,13 @@ interface Props {
     handleFileChange: any
     formData: any
     imageUrl: string | null
-    alertType: string
+    alertType: string | null
+    loadingOnsubmit: boolean
+    setAlertType: (value: string | null) => void
 }
 
 export default function ProductModals(props: Props) {
-    const { api, show, handleClose, editId, validated, handleSubmit, handleInputChange, handleFileChange, formData, imageUrl, alertType } = props;
+    const { api, show, handleClose, editId, validated, handleSubmit, handleInputChange, handleFileChange, formData, imageUrl, alertType, loadingOnsubmit, setAlertType } = props;
     const [options, setOptions] = useState([]);
 
     const fetchtype = useCallback(async () => {
@@ -42,14 +44,30 @@ export default function ProductModals(props: Props) {
     useEffect(() => {
         fetchtype()
     }, [fetchtype])
+
+
+
+
+
     const handleSelectChange = (selectedOption: any) => {
         // selectedOption ที่ผู้ใช้เลือกใน Select
         const name = 'typeID'; // ชื่อฟิลด์ที่คุณต้องการเปลี่ยนแปลง
         const value = selectedOption ? selectedOption.value : ''; // ค่าที่ต้องการเก็บ
 
+
         // เรียก handleInputChange เพื่อเปลี่ยนแปลงค่าใน state
         handleInputChange({ target: { name, value } });
+
+        // เช็คเงื่อนไขและตั้งค่า alertType ตามต้องการ
+        if (selectedOption) {
+            setAlertType(value); // หยุดการแสดงผล alertType
+        }
+
     };
+
+
+
+
     return (
         <>
             <Modal
@@ -83,7 +101,8 @@ export default function ProductModals(props: Props) {
                             <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>รายละเอียด</Form.Label>
                                 <Form.Control
-                                    type="text"
+                                    as="textarea"
+                                    rows={3}
                                     name="productDescription"
                                     placeholder="กรอกรายละเอียด"
                                     value={formData.productDescription}
@@ -98,13 +117,11 @@ export default function ProductModals(props: Props) {
                             <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>ประเภทสินค้า</Form.Label>
                                 <Select
-                                    defaultValue={
-                                        options.find((option: any) => option.value === formData.typeID) // หา option ที่มี value เท่ากับ formData.typeID
-                                    }
+                                    defaultValue={options.find((option: any) => option.value === formData.typeID)}
                                     onChange={handleSelectChange}
                                     options={options}
                                 />
-                                <span className='text-danger small'>{alertType ? "" : "กรุณาเลือกประเภทสินค้า"}</span>
+                                <span className='text-danger small'>{alertType == "" ? "กรุณากรอกประเภทสินค้า" : ""}</span>
                             </Form.Group>
                             <Form.Group as={Col} md="6" className="mb-2">
                                 <Form.Label>จำนวนสินค้าน้อยที่สุด</Form.Label>
@@ -171,6 +188,10 @@ export default function ProductModals(props: Props) {
                                     <option value="คู่">คู่</option>
                                     <option value="อัน">อัน</option>
                                     <option value="เล่ม">เล่ม</option>
+                                    <option value="รีม">รีม</option>
+                                    <option value="แพ็ค">แพ็ค</option>
+                                    <option value="ก้อน">ก้อน</option>
+                                    <option value="ม้วน">ม้วน</option>
                                 </Form.Select>
                                 <Form.Control.Feedback type="invalid">
                                     กรุณากรอกหน่วยนับ
@@ -192,7 +213,7 @@ export default function ProductModals(props: Props) {
                             </Form.Group>
                         </Row>
                         <Modal.Footer>
-                            <Button variant="primary" type="submit">{editId ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูล'}</Button>
+                            <Button variant="primary" type="submit" disabled={loadingOnsubmit}> {editId ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูล'} {loadingOnsubmit && <Spinner animation="border" size="sm" />} </Button>
                             <Button variant="secondary" onClick={handleClose}>
                                 ปิด
                             </Button>
