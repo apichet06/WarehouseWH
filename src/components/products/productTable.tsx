@@ -6,7 +6,7 @@ import DataTable from 'react-data-table-component';
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2'
 import { formatDate } from "../utility/dateUtils";
 import { showErrorAlert, showSuccessAlert } from "../utility/alertUtils";
 interface Props {
@@ -197,7 +197,7 @@ export default function ProductTable(props: Props) {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'ลบ!'
-            }).then(async (result) => {
+            }).then(async (result: any) => {
                 if (result.isConfirmed) {
                     try {
                         const response = await axios.delete(`${api}/productAPI/${id}`, {
