@@ -74,10 +74,10 @@ export default function ChartProduct(props: ChartProductProps) {
             legend: {
                 display: true,
             },
-            datalabels: {
-                anchor: 'end',
-                align: 'end',
-            },
+            // datalabels: {
+            //     anchor: 'end',
+            //     align: 'end',
+            // },
         },
     };
 
