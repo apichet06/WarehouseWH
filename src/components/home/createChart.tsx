@@ -33,6 +33,8 @@ interface Packing {
 
 }
 
+ChartJS.register(ChartDataLabels);
+
 export default function ChartProduct(props: ChartProductProps) {
     const { api } = props;
 
@@ -157,7 +159,7 @@ export default function ChartProduct(props: ChartProductProps) {
 
 
 
-    ChartJS.register(ChartDataLabels);
+
     // กำหนด options และใช้ ChartJS
     useEffect(() => {
         fetchData();
