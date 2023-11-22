@@ -21,16 +21,6 @@ export default function ChartProduct(props: ChartProductProps) {
     const { api } = props;
 
     const [Amount, setAmount] = useState<ProductData[]>([]);
-    // const initialData = {
-    //     labels: ['Red', 'Blue', 'Yellow'],
-    //     datasets: [{
-    //         label: 'My First Dataset',
-    //         data: [65, 59, 80],
-    //         backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    //         borderColor: 'rgb(255, 99, 132)',
-    //         borderWidth: 1
-    //     }]
-    // };
 
     const fetchData = useCallback(async () => {
         try {
