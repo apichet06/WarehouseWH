@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect } from "react";
@@ -38,6 +38,34 @@ export default function ChartProduct(props: ChartProductProps) {
                                 {api}
                                 <h2>จำนวนสินค้าทั้งหมด</h2>
                                 <Bar data={initialData} height="70%" />
+                                <Doughnut
+                                    data={{
+                                        labels: ['Red', 'Blue', 'Yellow'],
+                                        datasets: [
+                                            {
+                                                label: "Count",
+                                                data: [65, 59, 80],
+                                                backgroundColor: [
+                                                    "rgba(43, 63, 229, 0.8)",
+                                                    "rgba(250, 192, 19, 0.8)",
+                                                    "rgba(253, 135, 135, 0.8)",
+                                                ],
+                                                borderColor: [
+                                                    "rgba(43, 63, 229, 0.8)",
+                                                    "rgba(250, 192, 19, 0.8)",
+                                                    "rgba(253, 135, 135, 0.8)",
+                                                ],
+                                            },
+                                        ],
+                                    }}
+                                    options={{
+                                        plugins: {
+                                            title: {
+                                                text: "Revenue Sources",
+                                            },
+                                        },
+                                    }}
+                                />
                             </Card.Body>
                         </Card>
                     </Col>
