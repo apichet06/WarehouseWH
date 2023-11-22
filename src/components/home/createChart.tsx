@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS } from "chart.js/auto";
+import { Chart as ChartJS, ChartOptions } from "chart.js/auto";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect } from "react";
 interface ChartProductProps {
@@ -31,7 +31,7 @@ export default function ChartProduct(props: ChartProductProps) {
         }]
     };
 
-    const options = {
+    const options: ChartOptions<"bar"> = {
         scales: {
             x: {
                 type: 'category', // Specify the type as 'category'
