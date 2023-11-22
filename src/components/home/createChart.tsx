@@ -3,7 +3,7 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, ChartOptions } from "chart.js/auto";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 interface ChartProductProps {
     api: string;
 }
@@ -17,16 +17,8 @@ export default function ChartProduct(props: ChartProductProps) {
         datasets: [{
             label: 'My First Dataset',
             data: [65, 59, 80],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-            ],
-            borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-            ],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
             borderWidth: 1
         }]
     };
