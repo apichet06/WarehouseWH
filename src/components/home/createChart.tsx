@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, ChartData, ChartOptions, defaults } from "chart.js/auto";
+import { ChartData, ChartOptions, defaults } from "chart.js/auto";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 interface ChartProductProps {
     api: string;
 }
@@ -59,7 +59,7 @@ export default function ChartProduct(props: ChartProductProps) {
 
     // กำหนด options และใช้ ChartJS
     useEffect(() => {
-        ChartJS.register(ChartDataLabels);
+
         fetchData();
 
     }, [fetchData,]);
@@ -74,10 +74,7 @@ export default function ChartProduct(props: ChartProductProps) {
             legend: {
                 display: true,
             },
-            // datalabels: {
-            //     anchor: 'end',
-            //     align: 'end',
-            // },
+
         },
     };
 
