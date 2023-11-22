@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Bar, Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, defaults } from "chart.js/auto";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { useEffect } from "react";
+import { defaults } from "chart.js/auto";
+
 interface ChartProductProps {
     api: string;
 }
@@ -14,7 +13,6 @@ defaults.plugins.title.color = "black";
 
 export default function ChartProduct(props: ChartProductProps) {
     const { api } = props;
-
     const initialData = {
         labels: ['Red', 'Blue', 'Yellow'],
         datasets: [{
@@ -26,10 +24,7 @@ export default function ChartProduct(props: ChartProductProps) {
         }]
     };
 
-    useEffect(() => {
-        ChartJS.register(ChartDataLabels);
 
-    }, []);
     return (
         <>
 
