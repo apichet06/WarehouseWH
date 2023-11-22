@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { defaults } from "chart.js/auto";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { Doughnut } from "react-chartjs-2";
-
+import { Bar, Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, defaults } from "chart.js/auto";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useEffect } from "react";
 interface ChartProductProps {
     api: string;
 }
@@ -14,6 +15,21 @@ defaults.plugins.title.color = "black";
 export default function ChartProduct(props: ChartProductProps) {
     const { api } = props;
 
+    const initialData = {
+        labels: ['Red', 'Blue', 'Yellow'],
+        datasets: [{
+            label: 'My First Dataset',
+            data: [65, 59, 80],
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgb(255, 99, 132)',
+            borderWidth: 1
+        }]
+    };
+
+    useEffect(() => {
+        ChartJS.register(ChartDataLabels);
+
+    }, []);
     return (
         <>
 
@@ -24,6 +40,7 @@ export default function ChartProduct(props: ChartProductProps) {
                             <Card.Body>
                                 {api}
                                 <h2>จำนวนสินค้าทั้งหมด</h2>
+                                <Bar data={initialData} height="70%" />
                                 <Doughnut
                                     data={{
                                         labels: ['Red', 'Blue', 'Yellow'],
