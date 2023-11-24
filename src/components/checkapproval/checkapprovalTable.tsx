@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios"
 import { useCallback, useEffect, useState } from "react"
-import { Button, Card, Col, Container, Form, InputGroup, Row } from "react-bootstrap"
+import { Button, Card, Col, Container, Form, InputGroup, Row, Spinner } from "react-bootstrap"
 import DataTable from 'react-data-table-component';
 import { BsFillSendFill, BsFillTrash3Fill } from "react-icons/bs"
 import { useAppContext } from "../productList/AppContext";
@@ -35,6 +35,10 @@ export default function CheckApprovalTable(props: Props) {
     const [loading, setLoading] = useState(true);
     const { dispatch } = useAppContext(); // ใช้ Context ที่คุณสร้าง
     const [Purpose, setPurpose] = useState("");
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false)
+
+
+
     const navigate = useNavigate();
 
     const handleQty = async (id: number, amount: any) => {
@@ -145,9 +149,10 @@ export default function CheckApprovalTable(props: Props) {
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();
+        setLoadingOnsubmit(true)
         if (form.checkValidity() === false) {
             event.stopPropagation();
-
+            setLoadingOnsubmit(false)
         } else {
 
             Swal.fire({
@@ -158,7 +163,6 @@ export default function CheckApprovalTable(props: Props) {
                 cancelButtonColor: 'red',
                 confirmButtonText: 'ใช่!',
                 cancelButtonText: 'ไม่ใช่!',
-
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     const Data = {
@@ -175,8 +179,8 @@ export default function CheckApprovalTable(props: Props) {
                             timer: 1100
                         })
                         setTimeout(() => { navigate("/productlist"); }, 1500);
-
                         fieldData()
+                        setLoadingOnsubmit(false);
                     }
 
                 }
@@ -225,7 +229,7 @@ export default function CheckApprovalTable(props: Props) {
                                                         <Form.Control.Feedback type="invalid">กรุณาระบุเหตุผลที่ขอเบิก!</Form.Control.Feedback>
                                                     </Form.Group>
                                                     <Col md={6} className="d-grid gap-2">
-                                                        <Button type="submit" variant="outline-success">เบิกสินค้า <BsFillSendFill /></Button>
+                                                        <Button type="submit" variant="outline-success" disabled={loadingOnsubmit}>เบิกสินค้า <BsFillSendFill /> {loadingOnsubmit && <Spinner animation="border" size="sm" />}</Button>
                                                     </Col>
                                                 </Row>
                                             </Form>
