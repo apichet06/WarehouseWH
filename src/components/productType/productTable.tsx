@@ -29,27 +29,33 @@ export default function ProductTable(props: Props) {
     const [editId, setEditId] = useState('');
     const [typeName, setTypeName] = useState('');
     const [loading, setLoading] = useState(true);
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false);
 
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();
+        setLoadingOnsubmit(true)
         if (form.checkValidity() === false) {
             event.stopPropagation();
+            setLoadingOnsubmit(false)
         } else {
             try {
-                const response = editId ? await axios.put(api + '/productTypeAPI/' + editId, { typeName: typeName }) : await axios.post(api + '/productTypeAPI', { typeName: typeName });
+                const response = editId ?
+                    await axios.put(api + '/productTypeAPI/' + editId, { typeName: typeName }) :
+                    await axios.post(api + '/productTypeAPI', { typeName: typeName });
 
                 if (response.data.isSuccess === true) {
-                    await handleClose()
-                    await showSuccessAlert(response.data.message);
-                    await fetchData()
+                    handleClose()
+                    showSuccessAlert(response.data.message);
+                    fetchData()
+                    setLoadingOnsubmit(false)
                 } else {
-                    await handleClose()
-                    await showErrorAlert(response.data.message);
+                    handleClose()
+                    showErrorAlert(response.data.message);
                 }
             } catch (error: any) {
-                await handleClose()
-                await showErrorAlert(error);
+                handleClose()
+                showErrorAlert(error);
 
             }
 
@@ -62,7 +68,7 @@ export default function ProductTable(props: Props) {
     const [data, setData] = useState<ProductType[]>([])
 
     const columns = [
-        { name: 'ลำดับ', selector: (row: ProductType) => row.autoID, },
+        { name: 'ลำดับ', selector: (row: ProductType) => row.autoID, width: "70px" },
         { name: 'รหัสประเภทสินค้า', selector: (row: ProductType) => row.typeID, },
         { name: 'ชื่อประเภทสินค้า', selector: (row: ProductType) => row.typeName, },
         {
@@ -144,7 +150,8 @@ export default function ProductTable(props: Props) {
 
     return (
         <>
-            <ProductModals show={show} handleClose={handleClose} validated={validated} handleSubmit={handleSubmit} editId={editId} typeName={typeName} setTypeName={setTypeName} />
+            <ProductModals show={show} handleClose={handleClose} validated={validated} handleSubmit={handleSubmit}
+                editId={editId} typeName={typeName} setTypeName={setTypeName} loadingOnsubmit={loadingOnsubmit} />
             <Container>
                 <Row className="justify-content-center">
                     <Col md={7} className="text-end">
@@ -161,8 +168,7 @@ export default function ProductTable(props: Props) {
                                     columns={columns}
                                     data={data}
                                     progressPending={loading}
-                                    pagination
-                                />
+                                    pagination />
                             </Card.Body>
                         </Card>
                     </Col>

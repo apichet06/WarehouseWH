@@ -78,6 +78,7 @@ export default function ProductTable(props: Props) {
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setAlertType(formData.typeID)
+            setLoadingOnsubmit(false)
         }
 
         setValidated(true);

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
 import { useState, FormEvent } from "react";
 import axios from "axios";
 
@@ -12,19 +12,23 @@ interface DivisionModalProps {
     divisionName?: string;
     setDivisionName: (newValue: string) => void;
     fetchData: () => void;
+
 }
 
 export default function DivisionModal(props: DivisionModalProps) {
     const { api, show, handleClose, editBt, divisionName, setDivisionName, fetchData } = props;
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false);
     const [validated, setValidated] = useState(false);
     // เพิ่ม state สำหรับเก็บชื่อแผนก
     //   console.log(api);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         const form = event.currentTarget;
+        setLoadingOnsubmit(true);
         event.preventDefault();
         if (form.checkValidity() === false) {
             event.stopPropagation();
+            setLoadingOnsubmit(false)
         } else {
             // ทำบันทึกหรือแก้ไขแผนกของคุณที่นี่ 
             // ส่งค่า divisionName ไปยังฟังก์ชันแก้ไข
@@ -38,9 +42,8 @@ export default function DivisionModal(props: DivisionModalProps) {
 
                 if (response.status === 200) {
                     showSuccessAlert(response.data.message)
-
                     fetchData();
-
+                    setLoadingOnsubmit(false);
                 } else {
                     showErrorAlert(response.data.message)
                 }
@@ -85,8 +88,8 @@ export default function DivisionModal(props: DivisionModalProps) {
                         </Row>
 
                         <Modal.Footer>
-                            <Button variant="primary" type="submit">
-                                {editBt ? "แก้ไขข้อมูล" : "เพิ่มข้อมูล"}
+                            <Button variant="primary" type="submit" disabled={loadingOnsubmit}>
+                                {editBt ? "แก้ไขข้อมูล" : "เพิ่มข้อมูล"} {loadingOnsubmit && <Spinner animation="border" size="sm" />}
                             </Button>
                             <Button variant="secondary" onClick={handleClose}>
                                 ปิด

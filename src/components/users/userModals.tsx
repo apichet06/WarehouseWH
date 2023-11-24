@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { Button, Col, Form, Image, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Image, Modal, Row, Spinner } from "react-bootstrap";
 
 interface Props {
     show: boolean,
@@ -30,13 +30,13 @@ interface Props {
     setP_ID: (value: string) => void;
     imageUrl: string | null;
     handleFileUpload: (event: ChangeEvent<HTMLInputElement>) => void;
-
+    loadingOnsubmit: boolean
 }
 
 
 export default function UsersModals(props: Props) {
     const { show, handleClose, handleSubmit, validated, editId, api, p_ID, dV_ID, editData, setFirstName, setUsername, setLastName, setStatus, setDV_ID, setP_ID,
-        imageUrl, handleFileUpload } = props;
+        imageUrl, handleFileUpload, loadingOnsubmit } = props;
 
     const [divisionList, setDivisionList] = useState([]);
     const [positionList, setPositionList] = useState([]);
@@ -149,7 +149,7 @@ export default function UsersModals(props: Props) {
                             </Form.Group>
                         </Row>
                         <Modal.Footer>
-                            <Button variant="success" type="submit" >{editId ? "แก้ไขข้อมูล" : "เพิ่มข้อมูล"}</Button>
+                            <Button variant="success" type="submit" disabled={loadingOnsubmit}>{editId ? "แก้ไขข้อมูล" : "เพิ่มข้อมูล"} {loadingOnsubmit && <Spinner animation="border" size="sm" />}</Button>
                             <Button variant="secondary" onClick={handleClose}> Close </Button>
                         </Modal.Footer>
                     </Form>

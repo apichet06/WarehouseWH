@@ -25,6 +25,10 @@ export default function PosisionTable(props: Props) {
     const [dV_ID, setDV_ID] = useState("");
     const [p_Name, setpName] = useState("");
     const [editId, setEditId] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false);
+
+
     const handleClose = () => setShow(false);
     const handleShow = () => {
         setShow(true);
@@ -37,6 +41,7 @@ export default function PosisionTable(props: Props) {
             const response = await axios.get(`${api}/positionAPI`);
             const data = response.data.result;
             setData(data);
+            setLoading(false);
         } catch (error) {
             console.log("Error fetching position", error);
         }
@@ -71,10 +76,10 @@ export default function PosisionTable(props: Props) {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
-
+        setLoadingOnsubmit(true);
         if (form.checkValidity() === false) {
             event.stopPropagation();
-
+            setLoadingOnsubmit(false)
         } else {
 
 
@@ -86,6 +91,7 @@ export default function PosisionTable(props: Props) {
                     showSuccessAlert(response.data.message)
                     fetchData();
                     handleClose();
+                    setLoadingOnsubmit(false);
                 } else {
                     showErrorAlert(response.data.message)
                 }
@@ -157,6 +163,7 @@ export default function PosisionTable(props: Props) {
                                     columns={columns}
                                     data={data}
                                     pagination
+                                    progressPending={loading}
                                 />
                             </Card.Body>
                         </Card>
@@ -164,7 +171,7 @@ export default function PosisionTable(props: Props) {
                 </Row>
             </Container>
             <PositionModals api={api} show={show} handleClose={handleClose} fetchData={fetchData} validated={validated}
-                handleSubmit={handleSubmit} setDV_ID={setDV_ID} setpName={setpName} dV_ID={dV_ID} p_Name={p_Name} editId={editId} />
+                handleSubmit={handleSubmit} setDV_ID={setDV_ID} setpName={setpName} dV_ID={dV_ID} p_Name={p_Name} editId={editId} loadingOnsubmit={loadingOnsubmit} />
         </>
     )
 }

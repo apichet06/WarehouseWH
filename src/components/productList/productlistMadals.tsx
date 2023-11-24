@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, Image, InputGroup, Modal, Row } from "react-bootstrap"
+import { Button, Col, Container, Form, Image, InputGroup, Modal, Row, Spinner } from "react-bootstrap"
 
 interface Props {
     api: string
@@ -17,10 +17,11 @@ interface Props {
     qty: number
     setQty: (value: React.SetStateAction<number>) => void
     handleSave: () => void
+    loadingOnsubmit: boolean
 }
 
 export default function ProductlistMadals(props: Props) {
-    const { api, handleClose, show, showData, qty, setQty, handleSave } = props
+    const { api, handleClose, show, showData, qty, setQty, handleSave, loadingOnsubmit } = props
 
 
     const handlePlus = () => {
@@ -79,13 +80,13 @@ export default function ProductlistMadals(props: Props) {
                                 </InputGroup>
                             </Col>
                             <Col md={2} xs={4} className="text-center my-3" style={{ marginTop: "auto" }}>
-                                <Button variant="outline-success" size="sm" onClick={handleSave}>เพิ่มสินค้า</Button>
+                                <Button variant="outline-success" size="sm" onClick={handleSave} disabled={loadingOnsubmit}>เพิ่มสินค้า {loadingOnsubmit && <Spinner animation="border" size="sm" />}</Button>
                             </Col>
                         </Row>
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" size="sm" onClick={handleClose}>ปิด</Button>
+                    {!loadingOnsubmit && <Button variant="secondary" size="sm" onClick={handleClose}>ปิด</Button>}
                 </Modal.Footer>
             </Modal>
 

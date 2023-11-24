@@ -29,7 +29,7 @@ export default function DivisionTable(props: Props) {
    const handleShow = () => setShow(true);
 
    const columns = [
-      { name: "#", selector: (row: DivisionData) => row.id.toString() },
+      { name: "ลำดับ", selector: (row: DivisionData) => row.id.toString(), width: "70px" },
       { name: "รหัสแผนก", selector: (row: DivisionData) => row.dV_ID, sortable: true }, // ตั้ง sortable เป็น false
       { name: "ชื่อแผนก", selector: (row: DivisionData) => row.dV_Name, sortable: true }, // ตั้ง sortable เป็น false
       {
@@ -99,6 +99,7 @@ export default function DivisionTable(props: Props) {
             const data = response.data.result as DivisionData[];
             setData(data);
             setLoading(false);
+
          } else {
             console.log("ข้อมูลไม่ถูกต้อง");
          }
@@ -146,6 +147,7 @@ export default function DivisionTable(props: Props) {
             divisionName={divisionName}
             setDivisionName={setDivisionName}
             fetchData={fetchData}
+
          />
       </>
    );

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap"
+import { Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap"
 import Select from 'react-select';
 interface Props {
     api: string
@@ -12,10 +12,11 @@ interface Props {
     alertProduct: string
     handleinputChange: any
     setAlertProduct: (value: string) => void
+    loadingOnsubmit: boolean
 }
 
 export default function IncomingstockModals(props: Props) {
-    const { api, show, handleClose, validated, handleSubmit, alertProduct, handleinputChange, setAlertProduct } = props
+    const { api, show, handleClose, validated, handleSubmit, alertProduct, handleinputChange, setAlertProduct, loadingOnsubmit } = props
     const [options, setOptions] = useState([]);
     const fetchtype = useCallback(async () => {
         try {
@@ -87,14 +88,14 @@ export default function IncomingstockModals(props: Props) {
                             </Form.Group>
                         </Row>
                         <Modal.Footer>
-                            <Button variant="primary" type="submit">เพิ่มข้อมูล</Button>
+                            <Button variant="primary" type="submit" disabled={loadingOnsubmit}>เพิ่มข้อมูล {loadingOnsubmit && <Spinner animation="border" size="sm" />}</Button>
                             <Button variant="secondary" onClick={handleClose}>
                                 ปิด
                             </Button>
                         </Modal.Footer>
                     </Form>
                 </Modal.Body>
-            </Modal>
+            </Modal >
         </>
     )
 }

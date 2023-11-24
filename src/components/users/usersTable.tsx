@@ -62,6 +62,9 @@ export default function UsersTable(props: Props) {
     const [p_ID, setP_ID] = useState('');
     const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(true);
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false);
+
+
 
     const [data, setData] = useState<UsersData[]>([]);
     const [validated, setValidated] = useState(false);
@@ -89,9 +92,10 @@ export default function UsersTable(props: Props) {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const form = event.currentTarget;
-
+        setLoadingOnsubmit(true)
         if (form.checkValidity() === false) {
             event.stopPropagation();
+            setLoadingOnsubmit(false)
         } else {
             try {
                 const formData = new FormData();
@@ -113,6 +117,7 @@ export default function UsersTable(props: Props) {
                     fetchData();
                     setImageUrl(null);
                     handleClose();
+                    setLoadingOnsubmit(false);
                 } else {
                     showErrorAlert(response.data.message)
                 }
@@ -140,6 +145,7 @@ export default function UsersTable(props: Props) {
 
         setEditID(id.toString())
         handleShow()
+        setSelectedFile(null)
     }
 
     const handleDelete = async (id: number) => {
@@ -265,6 +271,7 @@ export default function UsersTable(props: Props) {
                 handleFileUpload={handleFileUpload}
                 p_ID={p_ID}
                 dV_ID={dV_ID}
+                loadingOnsubmit={loadingOnsubmit}
             />
         </>
     )

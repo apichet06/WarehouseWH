@@ -40,7 +40,7 @@ export default function ProductlistForm(props: Props) {
     const [showData, setShowData] = useState<DataProduct>(field);
     const [search, setSearch] = useState("");
     const [qty, setQty] = useState(1);
-
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false);
 
     const fetchData = useCallback(async () => {
         try {
@@ -86,6 +86,7 @@ export default function ProductlistForm(props: Props) {
 
     const handleSave = async () => {
         // ตรวจสอบว่า qty อยู่ในช่วงที่ระบบรับได้
+        await setLoadingOnsubmit(true)
         if (qty >= 1 && qty <= 9999999) {
             try {
                 const Formdata = new FormData();
@@ -100,8 +101,10 @@ export default function ProductlistForm(props: Props) {
                 });
 
                 if (response.status === 200) {
-                    handleClose();
-                    handleCountProduct()
+                    await setLoadingOnsubmit(false)
+                    await handleClose();
+                    await handleCountProduct()
+
                 }
             } catch (error) {
                 console.log(error);
@@ -172,7 +175,7 @@ export default function ProductlistForm(props: Props) {
                     )) : (<h3 className="text-center">ไม่พบรายการสินค้า</h3>)}
                 </Row>
             </Container>
-            <ProductlistMadals api={api} handleClose={handleClose} show={show} showData={showData} qty={qty} setQty={setQty} handleSave={handleSave} />
+            <ProductlistMadals api={api} handleClose={handleClose} show={show} showData={showData} qty={qty} setQty={setQty} handleSave={handleSave} loadingOnsubmit={loadingOnsubmit} />
 
         </>
     )

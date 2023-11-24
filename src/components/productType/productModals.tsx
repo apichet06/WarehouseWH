@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
 
 interface Props {
 
@@ -10,10 +10,10 @@ interface Props {
     editId: string;
     typeName: string;
     setTypeName: (v: string) => void;
-
+    loadingOnsubmit: boolean;
 }
 export default function ProductModals(props: Props) {
-    const { show, handleClose, validated, handleSubmit, editId, typeName, setTypeName } = props
+    const { show, handleClose, validated, handleSubmit, editId, typeName, setTypeName, loadingOnsubmit } = props
 
     return (
         <>
@@ -39,7 +39,9 @@ export default function ProductModals(props: Props) {
                             </Form.Group>
 
                         </Row> <Modal.Footer>
-                            <Button variant="primary" type="submit">{editId ? "แก้ไขข้อมูล" : "เพิ่มข้อมูล"}</Button>
+                            <Button variant="primary" type="submit" disabled={loadingOnsubmit}>
+                                {editId ? "แก้ไขข้อมูล" : "เพิ่มข้อมูล"} {loadingOnsubmit && <Spinner animation="border" size="sm" />}
+                            </Button>
                             <Button variant="secondary" onClick={handleClose}>
                                 ปิด
                             </Button>

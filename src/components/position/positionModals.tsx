@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { FormEvent, useCallback, useEffect, useState, } from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row, Spinner } from "react-bootstrap";
 
 
 interface Props {
@@ -16,10 +16,11 @@ interface Props {
     p_Name: string;
     dV_ID: string;
     editId: string;
+    loadingOnsubmit: boolean;
 }
 
 export default function PositionModals(props: Props) {
-    const { api, show, handleClose, validated, handleSubmit, setDV_ID, setpName, p_Name, dV_ID, editId } = props;
+    const { api, show, handleClose, validated, handleSubmit, setDV_ID, setpName, p_Name, dV_ID, editId, loadingOnsubmit } = props;
 
     const [division, setDivision] = useState([]);
 
@@ -81,8 +82,8 @@ export default function PositionModals(props: Props) {
                             </Form.Group>
                         </Row>
                         <Modal.Footer>
-                            <Button variant="primary" type="submit">
-                                {editId ? "แก้ไข" : "เพิ่ม"}
+                            <Button variant="primary" type="submit" disabled={loadingOnsubmit}>
+                                {editId ? "แก้ไข" : "เพิ่ม"} {loadingOnsubmit && <Spinner animation="border" size="sm" />}
                             </Button>
                             <Button variant="secondary" onClick={handleClose}>
                                 ปิด

@@ -51,7 +51,7 @@ export default function IncommingStockTable(props: Props) {
     const [alertProduct, setAlertProduct] = useState('')
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
+    const [loadingOnsubmit, setLoadingOnsubmit] = useState(false);
     const [validated, setValidated] = useState(false);
 
     const [formData, setformData] = useState<formData>({
@@ -69,19 +69,20 @@ export default function IncommingStockTable(props: Props) {
     const handleSubmit = async (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();
-
+        setLoadingOnsubmit(true);
         console.log(formData);
 
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setAlertProduct(formData.productID)
-
+            setLoadingOnsubmit(false)
         } else {
             const response = await axios.post(api + '/incomingStockAPI', formData);
             if (response.status === 200) {
                 await fetchData()
                 await handleClose()
                 await showSuccessAlert(response.data.message)
+                setLoadingOnsubmit(false)
             } else {
                 showErrorAlert(response.data.message)
             }
@@ -159,7 +160,7 @@ export default function IncommingStockTable(props: Props) {
     return (
         <>
             <IncomingstockModals api={api} show={show} handleClose={handleClose} validated={validated} handleSubmit={handleSubmit}
-                alertProduct={alertProduct} handleinputChange={handleinputChange} setAlertProduct={setAlertProduct} />
+                alertProduct={alertProduct} handleinputChange={handleinputChange} setAlertProduct={setAlertProduct} loadingOnsubmit={loadingOnsubmit} />
             <Container fluid>
                 <Row className="justify-content-center">
                     <Col md={11} className="mb-2 text-end">
