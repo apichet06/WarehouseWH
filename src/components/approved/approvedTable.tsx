@@ -2,12 +2,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Modal, Row, Tab, Tabs } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { formatDate } from "../utility/dateUtils";
 import { BsFiletypeDoc, BsFillChatSquareTextFill } from "react-icons/bs";
 import ApprovedModals from "./approvedModals";
 import { fetchData, fetchPickingGoodsDetails, fetchHistory } from './fetchFuntions.tsx';
+import Swal from "sweetalert2";
 
 
 interface Props {
@@ -23,6 +24,7 @@ interface InventoryRequest {
     divisionId: string
     purpose: string
     isApproved: string
+    note: string
     users: {
         firstName: string
         lastName: string
@@ -58,6 +60,7 @@ export default function ApprovedTable(props: Props) {
         divisionId: '',
         purpose: '',
         isApproved: '',
+        note: '',
         users: {
             firstName: '',
             lastName: '',
@@ -87,21 +90,53 @@ export default function ApprovedTable(props: Props) {
     const [pendingProduct, setPendingProduct] = useState(true);
     const [pickingGoodsDetails, setPickingGoodsDetails] = useState([]);
     const [key, setKey] = useState('home');
+    const [note, setNote] = useState('');
 
+    const [showCancel, setShowCancel] = useState(false);
+
+    const handleCloseCancel = () => setShowCancel(false);
+    const handleShowCancel = () => setShowCancel(true);
+
+
+    const [validated, setValidated] = useState(false);
 
     const handleSubmit = async (status: string, order: string) => {
-        try {
-            const Data = {
-                IsApproved: status,
-                requestCode: order,
-            }
-            const res = await axios.put(api + "/InventoryRequestAIP/" + results.userID, Data);
 
-            if (res.status === 200) {
+
+        try {
+            if (status === 'N') {
                 handleClose()
-                fetchData(api, setData, setPending, results.status, results.userID);
-                fetchHistory(api, setDataHistory, setPending, results.status, results.userID)
+                handleShowCancel()
+                setValidated(false);
+            } else {
+                Swal.fire({
+                    title: "คุณต้องการอนุมัติใบเบิก?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "ใช่!",
+                    cancelButtonText: "ยกเลิก"
+
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        const Data = {
+                            IsApproved: status,
+                            requestCode: order,
+                        }
+                        const res = await axios.put(api + "/InventoryRequestAIP/" + results.userID, Data);
+
+                        if (res.status === 200) {
+                            handleClose()
+                            fetchData(api, setData, setPending, results.status, results.userID);
+                            fetchHistory(api, setDataHistory, setPending, results.status, results.userID)
+                        }
+                    }
+                });
+
             }
+
+
 
         } catch (e) {
             console.log(e);
@@ -109,6 +144,34 @@ export default function ApprovedTable(props: Props) {
         }
 
     }
+
+
+    const handleSubmits = async (event: any) => {
+        const form = event.currentTarget;
+        event.preventDefault();
+        if (form.checkValidity() === false) {
+            event.stopPropagation();
+        } else {
+            const Data = {
+                IsApproved: "N",
+                requestCode: dataDetail?.requestCode,
+                note: note
+            }
+            const res = await axios.put(api + "/InventoryRequestAIP/" + results.userID, Data);
+
+            if (res.status === 200) {
+                handleClose()
+                fetchData(api, setData, setPending, results.status, results.userID);
+                fetchHistory(api, setDataHistory, setPending, results.status, results.userID)
+                handleCloseCancel()
+            }
+
+        }
+
+        setValidated(true);
+    };
+
+
 
     useEffect(() => {
         fetchData(api, setData, setPending, results.status, results.userID);
@@ -168,6 +231,33 @@ export default function ApprovedTable(props: Props) {
         <>
             <ApprovedModals api={api} handleClose={handleClose} show={show} dataDetail={dataDetail}
                 pickingGoodsDetails={pickingGoodsDetails} pendingProduct={pendingProduct} handleSubmit={handleSubmit} />
+
+
+            <Modal show={showCancel} onHide={handleCloseCancel} backdrop="static" centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>ยกเลิก : {dataDetail.requestCode}</Modal.Title>
+                </Modal.Header>
+                <Form noValidate validated={validated} onSubmit={handleSubmits}>
+                    <Modal.Body>
+
+                        <Form.Control
+                            required
+                            as="textarea"
+                            type="text"
+                            placeholder="เหตุผลที่ยกเลิก..."
+                            onChange={(e: any) => setNote(e.target.value)}
+                        />
+                        <Form.Control.Feedback type="invalid">กรุณาระบุเหตุผลที่ขอยกเลิกใบเบิก!</Form.Control.Feedback>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="success" size="sm" type="submit"> ยืนยัน</Button>
+                        <Button variant="secondary" size="sm" onClick={handleCloseCancel}>  ปิด </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
+
+
+
             <Container>
                 <Row className="justify-content-center">
                     <Col md={9} className="mb-3">

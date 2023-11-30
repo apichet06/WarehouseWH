@@ -40,6 +40,7 @@ export async function fetchHistory(api: string, setData: Function, setPending: F
                     .map((item: any, index: number) => ({ ...item, AutoID: index + 1 }))
                 );
             } else {
+
                 setData(response.data.result
                     .filter((item: any) => item.isApproved !== "i")
                     .map((item: any, index: number) => ({ ...item, AutoID: index + 1 }))
@@ -55,9 +56,10 @@ export async function fetchHistory(api: string, setData: Function, setPending: F
 
 export async function fetchPickingGoodsDetails(api: string, requestCode: string, setPickingGoodsDetails: Function, setPendingProduct: Function) {
     try {
-        const resonse = await axios.get(api + "/InventoryRequestAIP/Picking_GoodsDetail/" + requestCode);
-        if (resonse.status === 200) {
-            const newData = resonse.data.result.map((item: any, index: any) => ({
+        const response = await axios.get(api + "/InventoryRequestAIP/Picking_GoodsDetail/" + requestCode);
+        if (response.status === 200) {
+
+            const newData = response.data.result.map((item: any, index: any) => ({
                 ...item, AutoID: index + 1
             }))
             setPickingGoodsDetails(newData)

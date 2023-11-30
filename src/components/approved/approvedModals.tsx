@@ -15,6 +15,7 @@ interface Props {
         divisionId: string,
         purpose: string,
         isApproved: string
+        note: string
         users: {
             firstName: string,
             lastName: string,
@@ -70,7 +71,7 @@ export default function ApprovedModals(props: Props) {
         { name: "ราคาต่อหน่วย", selector: (row: Picking_GoodsDetail) => row.unitPrice.toLocaleString(), sortable: false, width: "110px", right: true },
         { name: "ราคาต่อหน่วยรวม", selector: (row: Picking_GoodsDetail) => (row.qtyWithdrawn * row.unitPrice).toLocaleString(), sortable: false, width: "140px", right: true },
     ];
-
+    console.log(dataDetail);
 
     return (
         <>
@@ -145,6 +146,14 @@ export default function ApprovedModals(props: Props) {
                                 />
                             </Col>
                         </Row>
+                        {dataDetail.isApproved == "N" ?
+                            <Row>
+                                <Col className="py-1" md={12}>
+                                    <hr />
+                                    <strong className="text-danger">เหตุผลที่ยกเลิก : {dataDetail?.note} </strong>
+
+                                </Col>
+                            </Row> : ''}
                     </Container>
 
                 </Modal.Body>
@@ -155,9 +164,16 @@ export default function ApprovedModals(props: Props) {
                     {!dataDetail.approvedUsers.firstName && results.status !== "พนักงาน" ? <DropdownButton variant="success" title="เลือก" size="sm">
                         <Dropdown.Item href="" onClick={() => handleSubmit("Y", dataDetail.requestCode)}>อนุมัติ</Dropdown.Item>
                         <Dropdown.Item href="" onClick={() => handleSubmit("N", dataDetail.requestCode)}>ไม่อนุมัติ</Dropdown.Item>
+
                     </DropdownButton> : ""}
+
+
                 </Modal.Footer>
             </Modal >
+
+
+
+
         </>
     )
 }
