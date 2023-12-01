@@ -198,7 +198,7 @@ export default function ApprovedTable(props: Props) {
         { name: 'ผู้เบิก', selector: (row: InventoryRequest) => row.users.firstName + " " + row.users.lastName, sortactive: false, width: '150px' },
         { name: 'เหตุผล', selector: (row: InventoryRequest) => row.purpose, sortactive: false, width: '180px' },
         { name: 'วันที่เบิก', selector: (row: InventoryRequest) => formatDate(row.transactionTime), sortactive: false, width: '162px', },
-        { name: 'Status', selector: (row: InventoryRequest) => row.isApproved == "Y" ? "ผ่าน" : "ไม่ผ่าน", sortactive: false, width: '70px', center: true },
+        { name: 'Status', selector: (row: InventoryRequest) => row.isApproved == "Y" ? "ผ่าน" : "ยกเลิก", sortactive: false, width: '70px', center: true },
         {
             name: 'ใบเบิก', cell: (row: InventoryRequest) => (<>
                 <Button size="sm" variant="outline-secondary" onClick={() => handleHistory(row.id)}> <BsFiletypeDoc /></Button>
