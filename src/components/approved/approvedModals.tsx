@@ -131,7 +131,7 @@ export default function ApprovedModals(props: Props) {
                                             <td>รหัสแผนก</td>
                                             <td>{dataDetail.approvedUsers.firstName ? dataDetail.approvedUsers.division.dV_ID : "-"}</td>
                                             <td>{dataDetail.approvedUsers.firstName ? dataDetail.approvedUsers.division.dV_Name : "-"}</td>
-                                            <td>{dataDetail.approvedUsers.firstName ? dataDetail.isApproved == "N" ? "ไม่ผ่าน" : "ผ่าน" : "-"}</td>
+                                            <td>{dataDetail.approvedUsers.firstName ? dataDetail.isApproved == "N" ? "ยกเลิก" : "ผ่าน" : "-"}</td>
                                         </tr>
                                     </thead>
                                 </Table>
