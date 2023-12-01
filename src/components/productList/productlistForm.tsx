@@ -14,6 +14,7 @@ interface DataProduct {
     pImages: string
     productName: string
     productDescription: string
+    qtyInStock: string
     productType: {
         typeName: string
     },
@@ -28,6 +29,7 @@ export default function ProductlistForm(props: Props) {
         pImages: '',
         productName: '',
         productDescription: '',
+        qtyInStock: '',
         productType: {
             typeName: ''
         },
@@ -36,7 +38,7 @@ export default function ProductlistForm(props: Props) {
 
     const result: any = JSON.parse(localStorage.getItem("resulte") || "{}")
     const { api } = props
-    const [data, setDate] = useState<DataProduct[]>([]);
+    const [data, setData] = useState<DataProduct[]>([]);
     const [showData, setShowData] = useState<DataProduct>(field);
     const [search, setSearch] = useState("");
     const [qty, setQty] = useState(1);
@@ -47,7 +49,7 @@ export default function ProductlistForm(props: Props) {
             const response = await axios.get(api + '/productAPI?search=' + search);
 
             if (response.status === 200) {
-                setDate(response.data.result)
+                setData(response.data.result)
             }
 
         } catch (error) {
@@ -127,6 +129,7 @@ export default function ProductlistForm(props: Props) {
                 pImages: pro.pImages,
                 productName: pro.productName,
                 productDescription: pro.productDescription,
+                qtyInStock: pro.qtyInStock,
                 productType: { typeName: pro.productType.typeName },
                 unitPrice: pro.unitPrice
             })

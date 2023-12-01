@@ -9,6 +9,7 @@ interface Props {
         pImages: string
         productName: string
         productDescription: string
+        qtyInStock: string
         productType: {
             typeName: string
         }
@@ -61,6 +62,7 @@ export default function ProductlistMadals(props: Props) {
                                         <h6 className="m-3">ประเภท : {showData.productType.typeName}</h6>
                                         <h6 className="m-3">รายละเอียด : {showData.productDescription}</h6>
                                         <h6 className="m-3">คารา : {showData.unitPrice.toLocaleString()} บาท </h6>
+                                        <h6 className="m-3 text-info">สินค้าคงคลัง : {showData.qtyInStock}</h6>
                                     </Col>
                                 </Row>
                             </Col>
