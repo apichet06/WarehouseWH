@@ -14,7 +14,7 @@ interface DataProduct {
     pImages: string
     productName: string
     productDescription: string
-    qtyInStock: string
+    qtyInStock: number
     productType: {
         typeName: string
     },
@@ -29,7 +29,7 @@ export default function ProductlistForm(props: Props) {
         pImages: '',
         productName: '',
         productDescription: '',
-        qtyInStock: '',
+        qtyInStock: 0,
         productType: {
             typeName: ''
         },

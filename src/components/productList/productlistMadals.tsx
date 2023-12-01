@@ -9,7 +9,7 @@ interface Props {
         pImages: string
         productName: string
         productDescription: string
-        qtyInStock: string
+        qtyInStock: number
         productType: {
             typeName: string
         }
@@ -26,7 +26,10 @@ export default function ProductlistMadals(props: Props) {
 
 
     const handlePlus = () => {
-        setQty(qty + 1); // เพิ่ม qty ขึ้น 1
+        if (qty < showData.qtyInStock) {
+            setQty(qty + 1);
+        }
+        // เพิ่ม qty ขึ้น 1
     }
 
     const handleReduce = () => {
@@ -70,11 +73,13 @@ export default function ProductlistMadals(props: Props) {
                             <Col md={3} xs={5} className="text-center my-3" style={{ marginTop: "auto" }}>
                                 <InputGroup  >
                                     <Button variant="secondary" id="button-addon1" onClick={handleReduce} size="sm">-</Button>
-                                    <Form.Control value={qty} className="text-center" size="sm" maxLength={3} onChange={(e) => {
+                                    <Form.Control value={qty > showData.qtyInStock ? showData.qtyInStock : qty} className="text-center" size="sm" maxLength={3} onChange={(e) => {
                                         let newQty = parseInt(e.target.value, 10);
                                         if (isNaN(newQty) || newQty === 0) {
-                                            // ถ้าผู้ใช้กรอกเลข 0 หรือไม่ใช่ตัวเลขให้ตั้งเป็น 1 แทน
+                                            // ถ้าผู้ใช้กรอกเลข 0 หรือไม่ใช่ตัวเลขให้ตั้งเป็น 1 แทน 
                                             newQty = 1;
+
+
                                         }
                                         setQty(newQty);
                                     }} />
@@ -91,7 +96,6 @@ export default function ProductlistMadals(props: Props) {
                     {!loadingOnsubmit && <Button variant="secondary" size="sm" onClick={handleClose}>ปิด</Button>}
                 </Modal.Footer>
             </Modal>
-
         </>
     )
 }
