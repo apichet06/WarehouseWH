@@ -15,11 +15,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { AppProvider } from "./components/productList/AppContext";
 import Approved from "./components/approved/approved";
-
+import { api } from "./components/utility/api";
 
 function App() {
-  // const api = "http://localhost:8081/WHAPI/api";
-  const api = "https://warehouseapi20240105074854.azurewebsites.net/api";
 
   return (
     <Router>
