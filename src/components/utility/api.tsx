@@ -1,1 +1,1 @@
-export const api = "http://localhost:8081/WHAPI/api";
+export const api = "http://localhost/WHAPI/api";
