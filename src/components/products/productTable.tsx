@@ -138,23 +138,23 @@ export default function ProductTable(props: Props) {
     };
 
     const columns = [
-        { name: 'ลำดับ', selector: (row: Product) => row.autoID, sortactive: true, width: '70px', },
-        { name: 'รหัสสินค้า', selector: (row: Product) => row.productID, sortactive: true },
-        { name: 'ชื่อสินค้า', selector: (row: Product) => row.productName, sortactive: true },
-        { name: 'ประเภทสินค้า', selector: (row: Product) => row.productType.typeName, sortactive: true },
+        { name: 'ลำดับ', selector: (row: Product) => row.autoID, sortactive: true, width: '65px' },
+        { name: 'รหัสสินค้า', selector: (row: Product) => row.productID, sortactive: true, width: '120px' },
+        { name: 'ชื่อสินค้า', selector: (row: Product) => row.productName, sortactive: true, width: '230px' },
+        { name: 'ประเภทสินค้า', selector: (row: Product) => row.productType.typeName, sortactive: true, width: '130px' },
         {
             name: 'รูปโปรไฟล์', cell: (row: Product) => (<>
                 {row.pImages ? (
                     <Image src={api + '/ImagesPathAPI/' + row.pImages} width={30} rounded />
-                ) : (<span>No image</span>)}</>)
+                ) : (<span>No image</span>)}</>), width: '90px'
         },
-        { name: 'รายละเอียด', selector: (row: Product) => row.productDescription, sortactive: true },
-        { name: 'จำนวนที่ควรมี', selector: (row: Product) => row.qtyMinimumStock, sortactive: true },
-        { name: 'จำนวนคงเหลือ', selector: (row: Product) => row.qtyInStock, sortactive: true },
-        { name: 'ราคาต่อหน่วย', selector: (row: Product) => row.unitPrice.toLocaleString(), sortactive: true },
-        { name: 'หน่วยนับ', selector: (row: Product) => row.unitOfMeasure, sortactive: true },
-        { name: 'วันที่รับสินค้า', selector: (row: Product) => row.receiveAt ? formatDate(row.receiveAt) : '-', sortactive: true },
-        { name: 'วันที่แก้ไขล่าสุด', selector: (row: Product) => row.lastAt ? formatDate(row.lastAt) : '-', sortactive: true },
+        { name: 'รายละเอียด', selector: (row: Product) => row.productDescription, sortactive: true, width: '360px' },
+        { name: 'จำนวนที่ควรมี', selector: (row: Product) => row.qtyMinimumStock, sortactive: true, width: '110px' },
+        { name: 'จำนวนคงเหลือ', selector: (row: Product) => row.qtyInStock, sortactive: true, width: '110px' },
+        { name: 'ราคาต่อหน่วย', selector: (row: Product) => row.unitPrice.toLocaleString(), sortactive: true, width: '110px' },
+        { name: 'หน่วยนับ', selector: (row: Product) => row.unitOfMeasure, sortactive: true, width: '100px' },
+        { name: 'วันที่รับสินค้า', selector: (row: Product) => row.receiveAt ? formatDate(row.receiveAt) : '-', sortactive: true, width: '160px' },
+        { name: 'วันที่แก้ไขล่าสุด', selector: (row: Product) => row.lastAt ? formatDate(row.lastAt) : '-', sortactive: true, width: '160px' },
         {
             name: "จัดการ",
             cell: (row: Product) => (
@@ -163,7 +163,7 @@ export default function ProductTable(props: Props) {
                     &nbsp; &nbsp;
                     <Button onClick={() => handleDelete(row.id)} variant="outline-danger" size="sm"><BsFillTrash3Fill /></Button>
                 </>
-            ), center: true
+            ), center: true, width: '110px'
         },
     ];
 

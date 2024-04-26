@@ -47,8 +47,6 @@ export default function ProductModals(props: Props) {
 
 
 
-
-
     const handleSelectChange = (selectedOption: any) => {
         // selectedOption ที่ผู้ใช้เลือกใน Select
         const name = 'typeID'; // ชื่อฟิลด์ที่คุณต้องการเปลี่ยนแปลง
